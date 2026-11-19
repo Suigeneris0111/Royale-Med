@@ -1,777 +1,1520 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Torneo Royale</title>
-<style>
-:root {
-  --fondo: #090d18;
-  --panel: #141b2b;
-  --dorado: #e8bd56;
-  --texto: #f5f5f5;
-  --borde: #343e50;
-}
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  margin: 0;
-  background: var(--fondo);
-  color: var(--texto);
-  font-family: Arial, sans-serif;
-}
-header {
-  background: #101624;
-  border-bottom: 1px solid var(--dorado);
-  padding: 18px;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-nav {
-  max-width: 1100px;
-  margin: auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-.logo { color: var(--dorado); font-size: 23px; font-weight: bold; }
-nav a { color: white; text-decoration: none; margin: 6px; }
-main { max-width: 1100px; margin: auto; padding: 18px; }
-section { margin: 30px 0; }
-h1, h2, h3 { color: var(--dorado); }
-.hero {
-  text-align: center;
-  border: 1px solid var(--borde);
-  border-radius: 20px;
-  padding: 40px 20px;
-  background: linear-gradient(135deg,#182239,#090d18);
-}
-.hero h1 { font-size: clamp(32px,6vw,60px); margin: 10px 0; }
-.panel {
-  background: var(--panel);
-  border: 1px solid var(--borde);
-  border-radius: 14px;
-  padding: 20px;
-  margin: 14px 0;
-}
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit,minmax(230px,1fr));
-  gap: 16px;
-}
-input, select, textarea {
-  display: block;
-  width: 100%;
-  background: #0a1020;
-  color: white;
-  border: 1px solid var(--borde);
-  border-radius: 8px;
-  padding: 12px;
-  margin: 8px 0 16px;
-  font: inherit;
-}
-label { font-weight: bold; }
-button, .boton {
-  border: 0;
-  background: var(--dorado);
-  color: #111;
-  padding: 12px 18px;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-}
-button:hover { filter: brightness(1.15); }
-.secundario {
-  background: #273249;
-  color: white;
-  border: 1px solid var(--borde);
-}
-.peligro { background: #aa3535; color: white; }
-.acciones { display: flex; flex-wrap: wrap; gap: 8px; }
-.precio { color: var(--dorado); font-size: 30px; font-weight: bold; }
-.muted { color: #adb7c9; }
-.tarjeta { text-align: center; }
-.tarjeta img {
-  width: 85px;
-  height: 85px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid var(--dorado);
-}
-.portada {
-  max-width: 100%;
-  max-height: 340px;
-  border-radius: 12px;
-  object-fit: cover;
-  margin: 15px auto;
-  display: block;
-}
-.galeria img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 12px;
-}
-table { width: 100%; border-collapse: collapse; }
-td, th { border-bottom: 1px solid var(--borde); padding: 12px; text-align: left; }
-.tabla { overflow-x: auto; }
-.oculto { display: none; }
-.estado { font-size: 13px; color: var(--dorado); }
-footer { text-align: center; padding: 30px; color: #999; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ROYALE MED — Clash Royale Competitive Platform</title>
+  <style>
+    :root {
+      --bg-void: #070a10;
+      --bg-panel: #0e131e;
+      --bg-panel-2: #131927;
+      --gold: #e6bd56;
+      --gold-bright: #f7d57b;
+      --gold-soft: rgba(230, 189, 86, 0.22);
+      --text-main: #f4f6fa;
+      --text-muted: #98a2b3;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-gold: rgba(230, 189, 86, 0.34);
+      --blue: #38bdf8;
+      --red: #ef4444;
+      --green: #22c55e;
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background:
+        radial-gradient(circle at 50% -8%, rgba(230, 189, 86, 0.11), transparent 48%),
+        linear-gradient(180deg, #090d16 0%, #06080d 100%);
+      color: var(--text-main);
+      line-height: 1.55;
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 0 18px 88px;
+    }
+
+    /* Top bar */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(7, 10, 16, 0.88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .brand-link {
+      font-size: 0.92rem;
+      font-weight: 900;
+      letter-spacing: 2.5px;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .nav-links::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav-links a {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      padding: 6px 10px;
+      border-radius: 8px;
+      white-space: nowrap;
+      transition: 0.18s;
+    }
+
+    .nav-links a:hover {
+      color: var(--gold);
+      background: rgba(230, 189, 86, 0.08);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      font-weight: 800;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: 0.18s;
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+      color: #080b12;
+    }
+
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.02);
+      border-color: var(--border-gold);
+      color: var(--gold);
+    }
+
+    .btn-ghost {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: var(--border);
+      color: var(--text-main);
+    }
+
+    .btn-sm {
+      padding: 7px 12px;
+      font-size: 0.78rem;
+      border-radius: 8px;
+    }
+
+    /* Hero matching reference */
+    .hero {
+      padding: 46px 12px 24px;
+      text-align: center;
+    }
+
+    .pill-kicker {
+      display: inline-block;
+      padding: 8px 20px;
+      border-radius: 999px;
+      border: 1px solid var(--border-gold);
+      background: rgba(230, 189, 86, 0.06);
+      color: var(--gold);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 7vw, 4.1rem);
+      font-weight: 900;
+      letter-spacing: 6px;
+      line-height: 1.08;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .hero p {
+      max-width: 610px;
+      margin: 0 auto 24px;
+      color: var(--text-muted);
+      font-size: 1rem;
+      line-height: 1.65;
+    }
+
+    .hero-cta {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* Tournaments list matching reference */
+    .section-block {
+      margin-top: 38px;
+    }
+
+    .section-label {
+      text-align: center;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 4.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 18px;
+    }
+
+    .section-heading-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 12px;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .section-heading-row h2 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--gold);
+    }
+
+    .section-sub {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .tournament-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .tournament-card {
+      background: linear-gradient(180deg, rgba(19, 25, 39, 0.92), rgba(12, 17, 27, 0.96));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 26px;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.15s, background 0.2s;
+    }
+
+    .tournament-card:hover {
+      border-color: var(--border-gold);
+      transform: translateY(-1px);
+    }
+
+    .tournament-card.selected {
+      border-color: var(--gold);
+      background: linear-gradient(180deg, rgba(230, 189, 86, 0.08), rgba(12, 17, 27, 0.98));
+    }
+
+    .tournament-num {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+
+    .tournament-title {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .tournament-desc {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+    }
+
+    /* Panels & Forms */
+    .panel {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 760px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .pass-selector {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 500px) {
+      .pass-selector {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .pass-box {
+      background: var(--bg-void);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 13px;
+      cursor: pointer;
+      transition: 0.18s;
+    }
+
+    .pass-box.active {
+      border-color: var(--gold);
+      background: rgba(230, 189, 86, 0.08);
+    }
+
+    .pass-price {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: var(--gold);
+    }
+
+    .pass-name {
+      font-size: 0.88rem;
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    .pass-detail {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    .field {
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 5px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg-void);
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 0.88rem;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    /* Brackets */
+    .bracket-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 560px) {
+      .bracket-tabs {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .bracket-tab {
+      background: var(--bg-void);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .bracket-tab.active {
+      border-color: var(--gold);
+      background: rgba(230, 189, 86, 0.09);
+    }
+
+    .bracket-tab-title {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .bracket-tab.active .bracket-tab-title {
+      color: var(--gold);
+    }
+
+    .bracket-tab-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .players-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+      gap: 12px;
+    }
+
+    .player-tile {
+      background: var(--bg-panel-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 13px 11px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .player-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gold);
+    }
+
+    .player-line.lower {
+      background: var(--blue);
+    }
+
+    .player-line.eliminated {
+      background: var(--red);
+    }
+
+    .player-avatar {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      margin: 4px auto 8px;
+      border: 1.5px solid var(--border-gold);
+      overflow: hidden;
+      background: var(--bg-void);
+    }
+
+    .player-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .player-name {
+      font-size: 0.88rem;
+      font-weight: 800;
+    }
+
+    .player-tag {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-family: monospace;
+    }
+
+    .badge {
+      display: inline-block;
+      margin-top: 7px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    .badge.gold {
+      border-color: var(--border-gold);
+      color: var(--gold);
+      background: rgba(230, 189, 86, 0.1);
+    }
+
+    .badge.blue {
+      border-color: rgba(56, 189, 248, 0.35);
+      color: #7dd3fc;
+      background: rgba(56, 189, 248, 0.1);
+    }
+
+    .badge.red {
+      border-color: rgba(239, 68, 68, 0.35);
+      color: #fca5a5;
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .badge.green {
+      border-color: rgba(34, 197, 94, 0.35);
+      color: #86efac;
+      background: rgba(34, 197, 94, 0.1);
+    }
+
+    /* Stream, Bets, Rules */
+    .stream-box {
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg-void);
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 18px;
+      overflow: hidden;
+    }
+
+    .stream-box iframe {
+      width: 100%;
+      height: 310px;
+      border: 0;
+      display: block;
+    }
+
+    .bet-card {
+      background: var(--bg-void);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      border-radius: 12px;
+      padding: 13px;
+      margin-bottom: 10px;
+    }
+
+    .bet-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .bet-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .rules-list {
+      padding-left: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+    }
+
+    th, td {
+      padding: 9px 8px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+
+    th {
+      color: var(--gold);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+    }
+
+    .admin-panel {
+      display: none;
+      margin-top: 34px;
+      border-color: var(--border-gold);
+    }
+
+    .admin-panel.open {
+      display: block;
+    }
+
+    /* Floating chatbot */
+    .bot-wrap {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 70;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .bot-window {
+      width: 300px;
+      max-width: calc(100vw - 28px);
+      height: 370px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-gold);
+      border-radius: 14px;
+      margin-bottom: 10px;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.75);
+    }
+
+    .bot-window.open {
+      display: flex;
+    }
+
+    .bot-head {
+      padding: 10px 12px;
+      background: var(--bg-panel-2);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: var(--gold);
+    }
+
+    .bot-msgs {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      font-size: 0.78rem;
+    }
+
+    .bot-msg {
+      padding: 8px 10px;
+      border-radius: 9px;
+      max-width: 86%;
+    }
+
+    .bot-msg.ai {
+      background: var(--bg-panel-2);
+      color: var(--text-main);
+      align-self: flex-start;
+    }
+
+    .bot-msg.me {
+      background: var(--gold);
+      color: #080b12;
+      font-weight: 700;
+      align-self: flex-end;
+    }
+
+    .bot-chips {
+      padding: 6px;
+      background: var(--bg-void);
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .bot-chip {
+      background: rgba(230, 189, 86, 0.08);
+      border: 1px solid var(--border-gold);
+      color: var(--gold);
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 3px 7px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .bot-form {
+      display: flex;
+      gap: 5px;
+      padding: 6px;
+      background: #06080d;
+      border-top: 1px solid var(--border);
+    }
+
+    .bot-form input {
+      padding: 7px 9px;
+      font-size: 0.78rem;
+    }
+
+    .bot-fab {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+      color: #080b12;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      font-weight: 900;
+      font-size: 0.74rem;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(230, 189, 86, 0.28);
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 22px;
+      transform: translateX(-50%);
+      background: var(--bg-panel-2);
+      border: 1px solid var(--gold);
+      color: var(--gold-bright);
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      z-index: 90;
+      display: none;
+    }
+
+    .toast.show {
+      display: block;
+    }
+  </style>
 </head>
 <body>
-
-<header>
-  <nav>
-    <div class="logo">♛ TORNEO ROYALE</div>
-    <div>
-      <a href="#inicio">Inicio</a>
-      <a href="#inscripcion">Inscripción</a>
-      <a href="#jugadores">Jugadores</a>
-      <a href="#partidas">Partidas</a>
-      <a href="#reglas">Reglas</a>
+  <header>
+    <div class="nav-inner">
+      <a href="#" class="brand-link">ROYALE MED</a>
+      <nav class="nav-links">
+        <a href="#torneos">Torneos</a>
+        <a href="#inscripcion">Inscripción</a>
+        <a href="#brackets">Brackets</a>
+        <a href="#en-vivo">En Vivo</a>
+        <a href="#apuestas">Apuestas</a>
+        <a href="#lugar-reglas">Lugar y Reglas</a>
+      </nav>
+      <button type="button" class="btn btn-gold btn-sm" id="adminBtn">Organizador</button>
     </div>
-    <button onclick="abrirAdmin()">⚙ Organizador</button>
-  </nav>
-</header>
+  </header>
 
-<main>
-  <section id="inicio" class="hero">
-    <p>COMPETENCIA DE CLASH ROYALE</p>
-    <h1 id="titulo">TORNEO ROYALE</h1>
-    <p id="descripcion">Demuestra tu habilidad y conquista la arena.</p>
-    <img id="portada" class="portada oculto" alt="Portada del torneo">
-    <h2 id="fecha">23 de noviembre de 2026</h2>
-    <p id="lugar">Modalidad virtual y presencial</p>
-    <div class="acciones" style="justify-content:center">
-      <a class="boton" href="#inscripcion">Inscribirme</a>
-      <a class="boton secundario" href="#jugadores">Ver participantes</a>
-    </div>
-  </section>
-
-  <section>
-    <h2>Inscripciones</h2>
-    <div class="grid">
-      <div class="panel">
-        <h3>Pase Simple</h3>
-        <div class="precio">S/ 3.00</div>
-        <p>Una oportunidad. Eliminación al perder.</p>
+  <main class="container">
+    <!-- PORTADA ESTILO REFERENCIA -->
+    <section class="hero">
+      <div class="pill-kicker">CLASH ROYALE · COMPETITIVE PLATFORM</div>
+      <h1>ROYALE MED</h1>
+      <p>
+        Una plataforma dedicada a la organización de torneos competitivos de Clash Royale. Diferentes arenas, nuevos desafíos y una comunidad unida por la competición.
+      </p>
+      <div class="hero-cta">
+        <a href="#inscripcion" class="btn btn-gold">Inscribirme (S/ 3 · S/ 5)</a>
+        <a href="#brackets" class="btn btn-outline">Upper &amp; Lower Bracket</a>
+        <a href="#en-vivo" class="btn btn-ghost">En Vivo</a>
       </div>
-      <div class="panel">
-        <h3>Doble Oportunidad</h3>
-        <div class="precio">S/ 5.00</div>
-        <p>Una segunda oportunidad en Lower Bracket.</p>
+    </section>
+
+    <!-- NUESTROS TORNEOS -->
+    <section class="section-block" id="torneos">
+      <div class="section-label">NUESTROS TORNEOS</div>
+      <div class="tournament-stack" id="tournamentsStack"></div>
+    </section>
+
+    <!-- INSCRIPCIÓN -->
+    <section class="section-block" id="inscripcion">
+      <div class="section-heading-row">
+        <div>
+          <h2>Inscripción al Torneo</h2>
+          <p class="section-sub">Pase Simple S/ 3 (1 oportunidad → Eliminados al perder) · Doble Oportunidad S/ 5 (cae a Lower Bracket).</p>
+        </div>
+        <span class="badge gold" id="selectedTournamentBadge">Torneo: Apex Prize Arena</span>
       </div>
-      <div class="panel">
-        <h3>Participantes confirmados</h3>
-        <div class="precio" id="totalJugadores">0</div>
-        <p>Jugadores registrados y aprobados.</p>
+
+      <div class="grid-2">
+        <div class="panel">
+          <form id="registerForm">
+            <div class="field">
+              <label>Selecciona tu pase</label>
+              <div class="pass-selector">
+                <div class="pass-box active" data-tier="simple" data-price="3">
+                  <div class="pass-price">S/ 3</div>
+                  <div class="pass-name">Pase Simple</div>
+                  <div class="pass-detail">1 vida. Si pierde en Upper, queda Eliminado.</div>
+                </div>
+                <div class="pass-box" data-tier="doble" data-price="5">
+                  <div class="pass-price">S/ 5</div>
+                  <div class="pass-name">Doble Oportunidad</div>
+                  <div class="pass-detail">Si pierde en Upper, pasa a Lower Bracket.</div>
+                </div>
+              </div>
+              <input type="hidden" id="regTier" value="simple" />
+              <input type="hidden" id="regPrice" value="3" />
+            </div>
+
+            <div class="field">
+              <label for="regName">Nombre o apodo</label>
+              <input type="text" id="regName" placeholder="Ej. ReyDorado" required />
+            </div>
+
+            <div class="grid-2" style="gap: 10px;">
+              <div class="field">
+                <label for="regTag">Tag de Clash Royale</label>
+                <input type="text" id="regTag" placeholder="Ej. #2P9L8Q" required />
+              </div>
+              <div class="field">
+                <label for="regModality">Modalidad</label>
+                <select id="regModality">
+                  <option value="Presencial">Presencial</option>
+                  <option value="Virtual">Virtual</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid-2" style="gap: 10px;">
+              <div class="field">
+                <label for="regContact">WhatsApp o Discord</label>
+                <input type="text" id="regContact" placeholder="999 888 777" required />
+              </div>
+              <div class="field">
+                <label for="regPayment">Comprobante / Pago</label>
+                <input type="text" id="regPayment" placeholder="Yape / Efectivo" required />
+              </div>
+            </div>
+
+            <p id="paymentHint" style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;"></p>
+            <button type="submit" class="btn btn-gold" style="width: 100%;">
+              Enviar Inscripción (S/ <span id="regBtnPrice">3</span>)
+            </button>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h3 style="font-size: 0.98rem; color: var(--gold);">Participantes</h3>
+            <span class="badge gold" id="playersCountBadge">0 jugadores</span>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
+            Los jugadores confirmados aparecen en los brackets y pueden ver la transmisión en vivo con su Tag.
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Jugador</th>
+                  <th>Pase</th>
+                  <th>Bracket</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody id="playersTableBody"></tbody>
+            </table>
+          </div>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section id="inscripcion">
-    <h2>⚔ Inscripción de jugadores</h2>
-    <div class="panel">
-      <form id="formRegistro">
-        <label>Nombre o apodo</label>
-        <input id="nombre" required maxlength="40"
-               placeholder="Tu nombre en el torneo">
+    <!-- BRACKETS: UPPER / LOWER / ELIMINADOS -->
+    <section class="section-block" id="brackets">
+      <div class="section-heading-row">
+        <div>
+          <h2>Upper Bracket, Lower Bracket y Eliminados</h2>
+          <p class="section-sub">Quienes tienen Doble Oportunidad (S/ 5) pasan a Lower Bracket al caer; los de S/ 3 se eliminan.</p>
+        </div>
+      </div>
 
-        <label>Tag de Clash Royale</label>
-        <input id="tag" required maxlength="20"
-               placeholder="#ABC123">
+      <div class="panel">
+        <div class="bracket-tabs">
+          <button type="button" class="bracket-tab active" data-bracket="upper">
+            <div class="bracket-tab-title">Upper Bracket</div>
+            <div class="bracket-tab-sub">Cuadro principal</div>
+          </button>
+          <button type="button" class="bracket-tab" data-bracket="lower">
+            <div class="bracket-tab-title">Lower Bracket (S/ 5)</div>
+            <div class="bracket-tab-sub">Doble oportunidad</div>
+          </button>
+          <button type="button" class="bracket-tab" data-bracket="eliminated">
+            <div class="bracket-tab-title">Eliminados</div>
+            <div class="bracket-tab-sub">Fuera del torneo</div>
+          </button>
+        </div>
+        <div class="players-grid" id="bracketGrid"></div>
+      </div>
+    </section>
 
-        <label>Contacto (WhatsApp o Discord)</label>
-        <input id="contacto" required
-               placeholder="Tu contacto">
+    <!-- EN VIVO Y APUESTAS -->
+    <section class="section-block">
+      <div class="grid-2">
+        <div class="panel" id="en-vivo">
+          <h2 style="font-size: 1.12rem; color: var(--gold); margin-bottom: 6px;">Transmisión en Vivo</h2>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">
+            Verifica tu Tag inscrito y confirmado para acceder a la transmisión.
+          </p>
+          <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+            <input type="text" id="verifyTagInput" placeholder="Tu Tag (ej. #2P9L8Q)" />
+            <button type="button" class="btn btn-gold btn-sm" id="verifyTagBtn">Verificar</button>
+          </div>
+          <div class="stream-box" id="streamBox">
+            <p style="font-size: 0.82rem; color: var(--text-muted);">Ingresa tu Tag confirmado para desbloquear la señal en vivo.</p>
+          </div>
+        </div>
 
-        <label>Tipo de inscripción</label>
-        <select id="pase">
-          <option value="simple">Pase Simple - S/ 3</option>
-          <option value="doble">Doble Oportunidad - S/ 5</option>
-        </select>
+        <div class="panel" id="apuestas">
+          <h2 style="font-size: 1.12rem; color: var(--gold); margin-bottom: 6px;">Apuestas del Evento</h2>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">
+            Mercados publicados y administrados por el organizador.
+          </p>
+          <div id="betsContainer"></div>
+        </div>
+      </div>
+    </section>
 
-        <label>Modalidad</label>
-        <select id="modalidad">
-          <option>Virtual</option>
-          <option>Presencial</option>
-        </select>
+    <!-- LUGAR Y REGLAS -->
+    <section class="section-block" id="lugar-reglas">
+      <div class="grid-2">
+        <div class="panel">
+          <h2 style="font-size: 1.1rem; color: var(--gold); margin-bottom: 8px;">Lugar y Horarios</h2>
+          <p id="venueInfo" style="font-size: 0.88rem; margin-bottom: 8px;"></p>
+          <p id="scheduleInfo" style="font-size: 0.82rem; color: var(--text-muted);"></p>
+        </div>
 
-        <label>Referencia de pago</label>
-        <input id="pago" placeholder="Número de operación o efectivo">
+        <div class="panel">
+          <h2 style="font-size: 1.1rem; color: var(--gold); margin-bottom: 8px;">Reglas</h2>
+          <ul class="rules-list" id="rulesList"></ul>
+        </div>
+      </div>
+    </section>
 
-        <p class="muted" id="informacionPago">
-          El organizador verificará el pago.
-        </p>
-        <button type="submit">Enviar inscripción</button>
+    <!-- PANEL ORGANIZADOR -->
+    <section class="panel admin-panel" id="adminPanel">
+      <div class="section-heading-row">
+        <div>
+          <h2>Panel del Organizador</h2>
+          <p class="section-sub">Confirma inscritos, registra derrotas (Lower / Eliminados), crea apuestas y edita sede o transmisión.</p>
+        </div>
+        <button type="button" class="btn btn-ghost btn-sm" id="resetBtn">Restaurar ejemplo</button>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel" style="background: var(--bg-void);">
+          <h3 style="font-size: 0.92rem; color: var(--gold); margin-bottom: 10px;">Lugar, Pagos y Transmisión</h3>
+          <div class="field">
+            <label for="editVenue">Lugar / Sede</label>
+            <input type="text" id="editVenue" />
+          </div>
+          <div class="field">
+            <label for="editSchedule">Horario</label>
+            <input type="text" id="editSchedule" />
+          </div>
+          <div class="field">
+            <label for="editPayment">Instrucciones de pago</label>
+            <input type="text" id="editPayment" />
+          </div>
+          <div class="field">
+            <label for="editStream">Enlace de transmisión (YouTube / sala)</label>
+            <input type="text" id="editStream" />
+          </div>
+          <button type="button" class="btn btn-gold btn-sm" id="saveConfigBtn">Guardar configuración</button>
+        </div>
+
+        <div class="panel" style="background: var(--bg-void);">
+          <h3 style="font-size: 0.92rem; color: var(--gold); margin-bottom: 10px;">Crear Apuesta y Editar Reglas</h3>
+          <div class="field">
+            <label for="betTitleInput">Pregunta de apuesta</label>
+            <input type="text" id="betTitleInput" placeholder="Ej. ¿Quién gana la partida?" />
+          </div>
+          <div class="field">
+            <label for="betOptionsInput">Opciones separadas por coma</label>
+            <input type="text" id="betOptionsInput" placeholder="Ej. ReyDorado, CoronaNegra" />
+          </div>
+          <button type="button" class="btn btn-gold btn-sm" id="createBetBtn" style="margin-bottom: 14px;">Abrir apuesta</button>
+
+          <div class="field">
+            <label for="editRulesInput">Reglas (una por línea)</label>
+            <textarea id="editRulesInput"></textarea>
+          </div>
+          <button type="button" class="btn btn-outline btn-sm" id="saveRulesBtn">Guardar reglas</button>
+        </div>
+      </div>
+
+      <div class="panel" style="background: var(--bg-void); margin-top: 14px;">
+        <h3 style="font-size: 0.92rem; color: var(--gold); margin-bottom: 10px;">Inscritos y Brackets</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Jugador</th>
+                <th>Pase</th>
+                <th>Bracket</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="adminPlayersBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- CHATBOT DE AYUDA -->
+  <div class="bot-wrap">
+    <div class="bot-window" id="botWindow">
+      <div class="bot-head">
+        <span>Ayuda · ROYALE MED</span>
+        <button type="button" id="botClose" style="background:none;border:none;color:var(--text-muted);font-size:1rem;cursor:pointer;">×</button>
+      </div>
+      <div class="bot-msgs" id="botMsgs">
+        <div class="bot-msg ai">Hola. Pregúntame sobre pases de S/ 3 o S/ 5, Lower Bracket, lugar o transmisión en vivo.</div>
+      </div>
+      <div class="bot-chips">
+        <button type="button" class="bot-chip" onclick="sendBotMsg('¿Cómo funciona S/ 3 y S/ 5?')">S/ 3 y S/ 5</button>
+        <button type="button" class="bot-chip" onclick="sendBotMsg('¿Cómo ver en vivo?')">En vivo</button>
+        <button type="button" class="bot-chip" onclick="sendBotMsg('¿Dónde es el torneo?')">Lugar</button>
+      </div>
+      <form class="bot-form" id="botForm">
+        <input type="text" id="botInput" placeholder="Escribe aquí..." />
+        <button type="submit" class="btn btn-gold btn-sm">Enviar</button>
       </form>
     </div>
-  </section>
+    <button type="button" class="bot-fab" id="botFab">AYUDA</button>
+  </div>
 
-  <section id="jugadores">
-    <h2>🏆 Jugadores confirmados</h2>
-    <div id="listaJugadores" class="grid"></div>
-  </section>
+  <div class="toast" id="toast"></div>
 
-  <section id="partidas">
-    <h2>⚔ Enfrentamientos</h2>
-    <div id="listaPartidas" class="grid"></div>
-  </section>
+  <script>
+    const STORAGE_KEY = "royale_med_platform_v1";
+    const ADMIN_PIN = "1234";
 
-  <section id="clasificacion">
-    <h2>📊 Clasificación</h2>
-    <div class="panel tabla">
-      <table>
-        <thead>
+    const DEFAULT_DATA = {
+      selectedTournamentId: "t1",
+      tournaments: [
+        {
+          id: "t1",
+          code: "TORNEO 01",
+          title: "Apex Prize Arena",
+          desc: "Compiten solo los rangos más altos que demuestren su dominio en la arena."
+        },
+        {
+          id: "t2",
+          code: "TORNEO 02",
+          title: "Prize Drop",
+          desc: "Una competición de muerte súbita y buscar la victoria directa."
+        },
+        {
+          id: "t3",
+          code: "TORNEO 03",
+          title: "The Big Bag Open",
+          desc: "Un desafío abierto para los jugadores que buscan obtener el pozo mayor."
+        }
+      ],
+      venue: "Arena Presencial & Salas Virtuales coordinadas por el staff.",
+      schedule: "Sábado y Domingo — 4:00 PM.",
+      payment: "Yape / Plin o efectivo al confirmar con el organizador.",
+      streamUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      rules: [
+        "Pase Simple (S/ 3): 1 oportunidad. Si pierde en Upper Bracket, pasa a Eliminados.",
+        "Doble Oportunidad (S/ 5): si pierde en Upper Bracket, pasa a Lower Bracket; si pierde en Lower, pasa a Eliminados.",
+        "Tolerancia máxima de 5 minutos al llamado de partida.",
+        "Las apuestas son gestionadas por el organizador."
+      ],
+      players: [
+        { id: "p1", name: "ReyDorado", tag: "#2P9L8Q", tier: "doble", price: 5, modality: "Presencial", contact: "999888777", paymentRef: "Yape #101", bracket: "upper", approved: true },
+        { id: "p2", name: "CoronaNegra", tag: "#9R4K2M", tier: "simple", price: 3, modality: "Virtual", contact: "911222333", paymentRef: "Yape #102", bracket: "upper", approved: true },
+        { id: "p3", name: "FenixCR", tag: "#8L2M5K", tier: "doble", price: 5, modality: "Presencial", contact: "988777666", paymentRef: "Yape #103", bracket: "lower", approved: true },
+        { id: "p4", name: "DuendeVeloz", tag: "#3Q7N1P", tier: "simple", price: 3, modality: "Virtual", contact: "944555666", paymentRef: "Efectivo", bracket: "eliminated", approved: true }
+      ],
+      bets: [
+        { id: "b1", title: "¿Quién gana el duelo principal?", options: ["ReyDorado", "CoronaNegra"], status: "Abierta", winner: "", entries: [] }
+      ]
+    };
+
+    let state = loadState();
+    let currentBracket = "upper";
+    let unlockedTag = null;
+    let adminUnlocked = false;
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? { ...structuredClone(DEFAULT_DATA), ...JSON.parse(raw) } : structuredClone(DEFAULT_DATA);
+      } catch {
+        return structuredClone(DEFAULT_DATA);
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function showToast(msg) {
+      const el = document.getElementById("toast");
+      el.textContent = msg;
+      el.classList.add("show");
+      clearTimeout(window.__toastT);
+      window.__toastT = setTimeout(() => el.classList.remove("show"), 2500);
+    }
+
+    function normalizeTag(t) {
+      const c = t.trim().toUpperCase();
+      if (!c) return "";
+      return c.startsWith("#") ? c : "#" + c;
+    }
+
+    function esc(s) {
+      return String(s)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;");
+    }
+
+    function bracketLabel(b) {
+      if (b === "lower") return "Lower Bracket";
+      if (b === "eliminated") return "Eliminado";
+      return "Upper Bracket";
+    }
+
+    function renderAll() {
+      const activeT = state.tournaments.find((t) => t.id === state.selectedTournamentId) || state.tournaments[0];
+      document.getElementById("selectedTournamentBadge").textContent = `Torneo: ${activeT.title}`;
+      document.getElementById("venueInfo").textContent = state.venue;
+      document.getElementById("scheduleInfo").textContent = state.schedule;
+
+      const price = Number(document.getElementById("regPrice").value) || 3;
+      document.getElementById("regBtnPrice").textContent = price;
+      document.getElementById("paymentHint").innerHTML =
+        `Monto: <strong style="color:var(--gold)">S/ ${price}.00</strong> — ${esc(state.payment)}`;
+      document.getElementById("playersCountBadge").textContent = `${state.players.length} jugadores`;
+
+      renderTournaments();
+      renderPlayersTable();
+      renderBracketGrid();
+      renderStream();
+      renderBets();
+      renderRules();
+
+      if (adminUnlocked) {
+        syncAdmin();
+        renderAdminPlayers();
+      }
+    }
+
+    function renderTournaments() {
+      document.getElementById("tournamentsStack").innerHTML = state.tournaments
+        .map(
+          (t) => `
+          <div class="tournament-card ${t.id === state.selectedTournamentId ? "selected" : ""}" onclick="selectTournament('${t.id}')">
+            <div class="tournament-num">${esc(t.code)}</div>
+            <div class="tournament-title">${esc(t.title)}</div>
+            <div class="tournament-desc">${esc(t.desc)}</div>
+          </div>
+        `
+        )
+        .join("");
+    }
+
+    function selectTournament(id) {
+      state.selectedTournamentId = id;
+      saveState();
+      renderAll();
+      showToast("Torneo seleccionado para inscripción.");
+    }
+
+    function renderPlayersTable() {
+      const body = document.getElementById("playersTableBody");
+      if (!state.players.length) {
+        body.innerHTML = `<tr><td colspan="4" style="color:var(--text-muted)">Sin jugadores registrados.</td></tr>`;
+        return;
+      }
+      body.innerHTML = state.players
+        .slice()
+        .reverse()
+        .map(
+          (p) => `
           <tr>
-            <th>Jugador</th>
-            <th>Victorias</th>
-            <th>Derrotas</th>
-            <th>Estado</th>
+            <td><strong>${esc(p.name)}</strong><br><span style="font-size:0.72rem;color:var(--text-muted)">${esc(p.tag)}</span></td>
+            <td>${p.tier === "doble" ? "S/ 5" : "S/ 3"}</td>
+            <td><span class="badge ${p.bracket === "lower" ? "blue" : p.bracket === "eliminated" ? "red" : "gold"}">${bracketLabel(p.bracket)}</span></td>
+            <td><span class="badge ${p.approved ? "green" : "red"}">${p.approved ? "Confirmado" : "Pendiente"}</span></td>
           </tr>
-        </thead>
-        <tbody id="ranking"></tbody>
-      </table>
-    </div>
-  </section>
+        `
+        )
+        .join("");
+    }
 
-  <section id="galeriaSeccion">
-    <h2>🖼 Galería del torneo</h2>
-    <div id="galeria" class="grid galeria"></div>
-  </section>
+    function renderBracketGrid() {
+      const grid = document.getElementById("bracketGrid");
+      const list = state.players.filter((p) => p.bracket === currentBracket && p.approved);
+      if (!list.length) {
+        grid.innerHTML = `<p style="grid-column:1/-1;font-size:0.86rem;color:var(--text-muted);padding:8px 0;">Sin jugadores en esta sección.</p>`;
+        return;
+      }
+      grid.innerHTML = list
+        .map(
+          (p) => `
+          <div class="player-tile">
+            <div class="player-line ${p.bracket}"></div>
+            <div class="player-avatar">
+              <img src="https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(p.name)}" alt="${esc(p.name)}" />
+            </div>
+            <div class="player-name">${esc(p.name)}</div>
+            <div class="player-tag">${esc(p.tag)}</div>
+            <span class="badge ${p.tier === "doble" ? "gold" : ""}">${p.tier === "doble" ? "Doble S/ 5" : "Simple S/ 3"}</span>
+          </div>
+        `
+        )
+        .join("");
+    }
 
-  <section id="reglas">
-    <h2>📜 Reglamento</h2>
-    <div class="panel" id="textoReglas"></div>
-  </section>
+    function renderStream() {
+      const box = document.getElementById("streamBox");
+      const found = state.players.find((p) => normalizeTag(p.tag) === unlockedTag && p.approved);
+      if (!unlockedTag || !found) {
+        box.style.padding = "18px";
+        box.innerHTML = `<p style="font-size:0.82rem;color:var(--text-muted);">Ingresa tu Tag confirmado para desbloquear la señal en vivo.</p>`;
+        return;
+      }
+      box.style.padding = "0";
+      box.innerHTML = `
+        <div style="width:100%;">
+          <iframe src="${esc(state.streamUrl)}" allowfullscreen></iframe>
+          <div style="padding:9px 12px;text-align:left;background:var(--bg-panel-2);font-size:0.78rem;color:var(--gold);">
+            Acceso activo: <strong>${esc(found.name)}</strong> (${esc(found.tag)})
+          </div>
+        </div>
+      `;
+    }
 
-  <section id="transmision">
-    <h2>🔴 Transmisión del torneo</h2>
-    <div class="panel">
-      <p>Consulta la transmisión oficial del organizador.</p>
-      <a id="enlaceStream" class="boton oculto"
-         target="_blank" rel="noopener noreferrer">
-        Ver transmisión
-      </a>
-      <p id="sinStream" class="muted">Aún no hay transmisión configurada.</p>
-    </div>
-  </section>
+    function renderBets() {
+      const box = document.getElementById("betsContainer");
+      if (!state.bets.length) {
+        box.innerHTML = `<p style="font-size:0.84rem;color:var(--text-muted);">No hay apuestas abiertas.</p>`;
+        return;
+      }
+      box.innerHTML = state.bets
+        .map(
+          (b) => `
+          <div class="bet-card">
+            <div class="bet-top">
+              <strong style="font-size:0.88rem;">${esc(b.title)}</strong>
+              <span class="badge ${b.status === "Abierta" ? "green" : b.status === "Cerrada" ? "red" : "gold"}">${esc(b.status)}</span>
+            </div>
+            <div class="bet-actions">
+              ${b.options
+                .map(
+                  (o) => `
+                  <button type="button" class="btn btn-outline btn-sm" ${b.status !== "Abierta" ? "disabled" : ""} onclick="placeBet('${b.id}', '${esc(o.replaceAll("'", "\\'"))}')">
+                    ${esc(o)}
+                  </button>
+                `
+                )
+                .join("")}
+            </div>
+          </div>
+        `
+        )
+        .join("");
+    }
 
-  <section id="administracion" class="oculto">
-    <h2>⚙ Panel de administración</h2>
-    <div class="panel">
-      <h3>Editar información del torneo</h3>
+    function renderRules() {
+      document.getElementById("rulesList").innerHTML = state.rules.map((r) => `<li>${esc(r)}</li>`).join("");
+    }
 
-      <label>Nombre del torneo</label>
-      <input id="editTitulo">
+    function renderAdminPlayers() {
+      const body = document.getElementById("adminPlayersBody");
+      body.innerHTML = state.players
+        .map(
+          (p) => `
+          <tr>
+            <td><strong>${esc(p.name)}</strong><br><span style="font-size:0.72rem;color:var(--text-muted)">${esc(p.tag)}</span></td>
+            <td>${p.tier === "doble" ? "S/ 5" : "S/ 3"}</td>
+            <td>${bracketLabel(p.bracket)}</td>
+            <td>${p.approved ? "Confirmado" : "Pendiente"}</td>
+            <td style="display:flex;gap:5px;flex-wrap:wrap;">
+              <button type="button" class="btn btn-outline btn-sm" onclick="toggleApprove('${p.id}')">${p.approved ? "Pendiente" : "Confirmar"}</button>
+              <button type="button" class="btn btn-gold btn-sm" onclick="registerLoss('${p.id}')">Perdió</button>
+              <button type="button" class="btn btn-ghost btn-sm" onclick="setBracket('${p.id}', 'upper')">Upper</button>
+            </td>
+          </tr>
+        `
+        )
+        .join("");
+    }
 
-      <label>Descripción</label>
-      <textarea id="editDescripcion"></textarea>
+    function syncAdmin() {
+      document.getElementById("editVenue").value = state.venue;
+      document.getElementById("editSchedule").value = state.schedule;
+      document.getElementById("editPayment").value = state.payment;
+      document.getElementById("editStream").value = state.streamUrl;
+      document.getElementById("editRulesInput").value = state.rules.join("\n");
+    }
 
-      <label>Fecha</label>
-      <input id="editFecha" type="date">
+    function registerLoss(id) {
+      const p = state.players.find((x) => x.id === id);
+      if (!p) return;
+      if (p.bracket === "upper") {
+        if (p.tier === "doble") {
+          p.bracket = "lower";
+          showToast(`${p.name} pasó a Lower Bracket.`);
+        } else {
+          p.bracket = "eliminated";
+          showToast(`${p.name} quedó Eliminado.`);
+        }
+      } else {
+        p.bracket = "eliminated";
+        showToast(`${p.name} quedó Eliminado.`);
+      }
+      saveState();
+      renderAll();
+    }
 
-      <label>Lugar o modalidad</label>
-      <input id="editLugar">
+    function setBracket(id, target) {
+      const p = state.players.find((x) => x.id === id);
+      if (!p) return;
+      p.bracket = target;
+      saveState();
+      renderAll();
+      showToast(`${p.name} movido a ${bracketLabel(target)}.`);
+    }
 
-      <label>Información de pagos</label>
-      <textarea id="editPago"></textarea>
+    function toggleApprove(id) {
+      const p = state.players.find((x) => x.id === id);
+      if (!p) return;
+      p.approved = !p.approved;
+      saveState();
+      renderAll();
+      showToast("Estado actualizado.");
+    }
 
-      <label>Reglamento</label>
-      <textarea id="editReglas" rows="6"></textarea>
+    function placeBet(betId, choice) {
+      const bet = state.bets.find((b) => b.id === betId);
+      if (!bet || bet.status !== "Abierta") return;
+      const user = prompt("Tu nombre o apodo:");
+      if (!user || !user.trim()) return;
+      const amount = parseFloat(prompt(`Monto en S/ para "${choice}":`, "3"));
+      if (isNaN(amount) || amount <= 0) return showToast("Monto inválido.");
+      bet.entries.push({ user: user.trim(), choice, amount });
+      saveState();
+      showToast("Apuesta registrada.");
+    }
 
-      <label>Enlace de transmisión</label>
-      <input id="editStream" type="url"
-             placeholder="https://youtube.com/...">
-
-      <button onclick="guardarConfiguracion()">Guardar cambios</button>
-    </div>
-
-    <div class="panel">
-      <h3>🖼 Administrar imágenes</h3>
-      <label>Subir imagen de portada</label>
-      <input type="file" id="archivoPortada" accept="image/*">
-      <button onclick="subirPortada()">Guardar portada</button>
-
-      <hr>
-      <label>Agregar imagen a la galería</label>
-      <input type="file" id="archivoGaleria" accept="image/*">
-      <button onclick="subirGaleria()">Agregar imagen</button>
-      <button class="secundario" onclick="vaciarGaleria()">
-        Vaciar galería
-      </button>
-    </div>
-
-    <div class="panel">
-      <h3>Administrar inscripciones</h3>
-      <div id="adminJugadores"></div>
-    </div>
-
-    <div class="panel">
-      <h3>Crear enfrentamiento</h3>
-      <label>Jugador 1</label>
-      <select id="jugador1"></select>
-      <label>Jugador 2</label>
-      <select id="jugador2"></select>
-      <button onclick="crearPartida()">Crear partida</button>
-      <div id="adminPartidas"></div>
-    </div>
-
-    <div class="panel">
-      <h3>Exportar datos</h3>
-      <button onclick="exportarDatos()">Descargar copia JSON</button>
-      <button class="secundario" onclick="cerrarAdmin()">
-        Cerrar administración
-      </button>
-    </div>
-  </section>
-</main>
-
-<footer>
-  TORNEO ROYALE · Plataforma de competición
-</footer>
-
-<script>
-const CLAVE = "torneo_royale_datos_v2";
-const inicial = {
-  titulo: "TORNEO ROYALE",
-  descripcion: "Demuestra tu habilidad y conquista la arena.",
-  fecha: "2026-11-23",
-  lugar: "Modalidad virtual y presencial",
-  pago: "El organizador verificará tu pago.",
-  reglas: [
-    "Pase Simple: una oportunidad.",
-    "Pase Doble: una segunda oportunidad en Lower Bracket.",
-    "Respeta los horarios y las decisiones del organizador.",
-    "Los resultados deben ser confirmados por el organizador."
-  ].join("\n"),
-  stream: "",
-  portada: "",
-  galeria: [],
-  jugadores: [],
-  partidas: []
-};
-
-function cargar() {
-  try {
-    const datos = JSON.parse(localStorage.getItem(CLAVE));
-    return datos ? { ...inicial, ...datos } : structuredClone(inicial);
-  } catch {
-    return structuredClone(inicial);
-  }
-}
-
-let db = cargar();
-let administrador = false;
-
-function guardar() {
-  try {
-    localStorage.setItem(CLAVE, JSON.stringify(db));
-  } catch {
-    alert("No hay espacio para guardar más imágenes. Usa imágenes pequeñas.");
-  }
-}
-
-function $(id) { return document.getElementById(id); }
-
-function limpiar(texto) {
-  return String(texto ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
-}
-
-function idNuevo() {
-  return crypto.randomUUID
-    ? crypto.randomUUID()
-    : Date.now() + "_" + Math.random();
-}
-
-function fechaLegible(fecha) {
-  if (!fecha) return "Fecha por confirmar";
-  return new Date(fecha + "T12:00:00")
-    .toLocaleDateString("es-PE", {
-      day: "numeric", month: "long", year: "numeric"
+    /* Events */
+    document.querySelectorAll(".pass-box").forEach((box) => {
+      box.addEventListener("click", () => {
+        document.querySelectorAll(".pass-box").forEach((b) => b.classList.remove("active"));
+        box.classList.add("active");
+        document.getElementById("regTier").value = box.dataset.tier;
+        document.getElementById("regPrice").value = box.dataset.price;
+        renderAll();
+      });
     });
-}
 
-function render() {
-  $("titulo").textContent = db.titulo;
-  $("descripcion").textContent = db.descripcion;
-  $("fecha").textContent = fechaLegible(db.fecha);
-  $("lugar").textContent = db.lugar;
-  $("informacionPago").textContent = db.pago;
-  $("textoReglas").textContent = db.reglas;
+    document.querySelectorAll(".bracket-tab").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".bracket-tab").forEach((t) => t.classList.remove("active"));
+        tab.classList.add("active");
+        currentBracket = tab.dataset.bracket;
+        renderBracketGrid();
+      });
+    });
 
-  $("totalJugadores").textContent =
-    db.jugadores.filter(j => j.aprobado).length;
+    document.getElementById("registerForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = document.getElementById("regName").value.trim();
+      const tag = normalizeTag(document.getElementById("regTag").value);
+      const tier = document.getElementById("regTier").value;
+      const price = Number(document.getElementById("regPrice").value) || 3;
+      const modality = document.getElementById("regModality").value;
+      const contact = document.getElementById("regContact").value.trim();
+      const paymentRef = document.getElementById("regPayment").value.trim();
+      if (!name || !tag) return;
 
-  if (db.portada) {
-    $("portada").src = db.portada;
-    $("portada").classList.remove("oculto");
-  } else {
-    $("portada").classList.add("oculto");
-  }
+      state.players.push({
+        id: "p_" + Date.now(),
+        name,
+        tag,
+        tier,
+        price,
+        modality,
+        contact,
+        paymentRef,
+        bracket: "upper",
+        approved: false
+      });
+      saveState();
+      e.target.reset();
+      document.getElementById("regTier").value = "simple";
+      document.getElementById("regPrice").value = "3";
+      document.querySelectorAll(".pass-box").forEach((b, i) => b.classList.toggle("active", i === 0));
+      renderAll();
+      showToast("Inscripción enviada. Pendiente de confirmación.");
+    });
 
-  const url = validarUrl(db.stream);
-  $("enlaceStream").classList.toggle("oculto", !url);
-  $("sinStream").classList.toggle("oculto", !!url);
-  if (url) $("enlaceStream").href = url;
+    document.getElementById("verifyTagBtn").addEventListener("click", () => {
+      const tag = normalizeTag(document.getElementById("verifyTagInput").value);
+      const p = state.players.find((x) => normalizeTag(x.tag) === tag);
+      if (!p) return showToast("Tag no encontrado.");
+      if (!p.approved) return showToast("Tu inscripción aún está pendiente.");
+      unlockedTag = tag;
+      renderStream();
+      showToast("Transmisión desbloqueada.");
+    });
 
-  renderJugadores();
-  renderPartidas();
-  renderRanking();
-  renderGaleria();
+    document.getElementById("adminBtn").addEventListener("click", () => {
+      if (!adminUnlocked) {
+        const pin = prompt(`PIN de organizador (por defecto: ${ADMIN_PIN}):`);
+        if (pin !== ADMIN_PIN) return showToast("PIN incorrecto.");
+        adminUnlocked = true;
+        document.getElementById("adminPanel").classList.add("open");
+        syncAdmin();
+        renderAll();
+      } else {
+        adminUnlocked = false;
+        document.getElementById("adminPanel").classList.remove("open");
+      }
+    });
 
-  if (administrador) {
-    renderAdmin();
-  }
-}
+    document.getElementById("saveConfigBtn").addEventListener("click", () => {
+      state.venue = document.getElementById("editVenue").value.trim();
+      state.schedule = document.getElementById("editSchedule").value.trim();
+      state.payment = document.getElementById("editPayment").value.trim();
+      state.streamUrl = document.getElementById("editStream").value.trim();
+      saveState();
+      renderAll();
+      showToast("Configuración guardada.");
+    });
 
-function validarUrl(url) {
-  try {
-    const u = new URL(url);
-    return ["http:", "https:"].includes(u.protocol)
-      ? u.href : "";
-  } catch {
-    return "";
-  }
-}
+    document.getElementById("saveRulesBtn").addEventListener("click", () => {
+      state.rules = document
+        .getElementById("editRulesInput")
+        .value.split("\n")
+        .map((x) => x.trim())
+        .filter(Boolean);
+      saveState();
+      renderAll();
+      showToast("Reglas guardadas.");
+    });
 
-$("formRegistro").addEventListener("submit", function(e) {
-  e.preventDefault();
+    document.getElementById("createBetBtn").addEventListener("click", () => {
+      const title = document.getElementById("betTitleInput").value.trim();
+      const options = document
+        .getElementById("betOptionsInput")
+        .value.split(",")
+        .map((x) => x.trim())
+        .filter(Boolean);
+      if (!title || options.length < 2) return showToast("Escribe un título y al menos 2 opciones.");
+      state.bets.unshift({ id: "b_" + Date.now(), title, options, status: "Abierta", winner: "", entries: [] });
+      saveState();
+      renderAll();
+      document.getElementById("betTitleInput").value = "";
+      document.getElementById("betOptionsInput").value = "";
+      showToast("Apuesta abierta.");
+    });
 
-  const tag = $("tag").value.trim().toUpperCase();
-  const normalizado = tag.startsWith("#") ? tag : "#" + tag;
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      state = structuredClone(DEFAULT_DATA);
+      unlockedTag = null;
+      saveState();
+      syncAdmin();
+      renderAll();
+      showToast("Datos de ejemplo restaurados.");
+    });
 
-  if (!/^#[A-Z0-9]{3,15}$/.test(normalizado)) {
-    alert("Introduce un tag válido.");
-    return;
-  }
-  if (db.jugadores.some(j => j.tag === normalizado)) {
-    alert("Este tag ya está registrado.");
-    return;
-  }
+    /* Chatbot */
+    const botWin = document.getElementById("botWindow");
+    const botMsgs = document.getElementById("botMsgs");
+    document.getElementById("botFab").addEventListener("click", () => botWin.classList.toggle("open"));
+    document.getElementById("botClose").addEventListener("click", () => botWin.classList.remove("open"));
 
-  db.jugadores.push({
-    id: idNuevo(),
-    nombre: $("nombre").value.trim(),
-    tag: normalizado,
-    contacto: $("contacto").value.trim(),
-    pase: $("pase").value,
-    modalidad: $("modalidad").value,
-    referencia: $("pago").value.trim(),
-    aprobado: false,
-    bracket: "upper",
-    victorias: 0,
-    derrotas: 0
-  });
+    function pushBot(text, who) {
+      const d = document.createElement("div");
+      d.className = `bot-msg ${who}`;
+      d.textContent = text;
+      botMsgs.appendChild(d);
+      botMsgs.scrollTop = botMsgs.scrollHeight;
+    }
 
-  guardar();
-  render();
-  this.reset();
-  alert("Inscripción enviada. Pendiente de aprobación.");
-});
+    function sendBotMsg(text) {
+      pushBot(text, "me");
+      setTimeout(() => {
+        const q = text.toLowerCase();
+        if (q.includes("3") || q.includes("5") || q.includes("doble") || q.includes("lower")) {
+          pushBot("Pase Simple (S/ 3): 1 oportunidad, si pierde pasa a Eliminados. Doble Oportunidad (S/ 5): si pierde en Upper, pasa a Lower Bracket.", "ai");
+        } else if (q.includes("vivo") || q.includes("tag")) {
+          pushBot("Ingresa tu Tag confirmado en la sección 'Transmisión en Vivo' para ver la señal.", "ai");
+        } else if (q.includes("lugar") || q.includes("donde") || q.includes("horario")) {
+          pushBot(`${state.venue} — ${state.schedule}`, "ai");
+        } else {
+          pushBot("Puedes inscribirte eligiendo S/ 3 o S/ 5, ver los cuadros de Upper / Lower / Eliminados y consultar al organizador.", "ai");
+        }
+      }, 250);
+    }
 
-function renderJugadores() {
-  const lista = db.jugadores.filter(j => j.aprobado);
+    document.getElementById("botForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const inp = document.getElementById("botInput");
+      const val = inp.value.trim();
+      if (!val) return;
+      inp.value = "";
+      sendBotMsg(val);
+    });
 
-  $("listaJugadores").innerHTML = lista.length
-    ? lista.map(j => `
-      <div class="panel tarjeta">
-        <h3>${limpiar(j.nombre)}</h3>
-        <p>${limpiar(j.tag)}</p>
-        <p>${j.pase === "doble" ? "Doble oportunidad" : "Pase simple"}</p>
-        <span class="estado">${limpiar(j.bracket)}</span>
-      </div>
-    `).join("")
-    : '<p class="muted">Todavía no hay jugadores confirmados.</p>';
-}
-
-function renderPartidas() {
-  $("listaPartidas").innerHTML = db.partidas.length
-    ? db.partidas.map(p => `
-      <div class="panel tarjeta">
-        <h3>${limpiar(p.nombre1)} VS ${limpiar(p.nombre2)}</h3>
-        <p>${p.ganador
-          ? "Ganador: " + limpiar(p.ganador)
-          : "Partida pendiente"}</p>
-      </div>
-    `).join("")
-    : '<p class="muted">Aún no hay enfrentamientos.</p>';
-}
-
-function renderRanking() {
-  const jugadores = db.jugadores.filter(j => j.aprobado)
-    .sort((a,b) =>
-      b.victorias - a.victorias || a.derrotas - b.derrotas
-    );
-
-  $("ranking").innerHTML = jugadores.map(j => `
-    <tr>
-      <td>${limpiar(j.nombre)}</td>
-      <td>${j.victorias}</td>
-      <td>${j.derrotas}</td>
-      <td>${limpiar(j.bracket)}</td>
-    </tr>
-  `).join("");
-}
-
-function renderGaleria() {
-  $("galeria").innerHTML = db.galeria.map((imagen, i) => `
-    <div class="panel">
-      <img src="${imagen}" alt="Imagen del torneo ${i+1}">
-      ${administrador
-        ? `<button class="peligro" onclick="borrarImagen(${i})">Eliminar</button>`
-        : ""}
-    </div>
-  `).join("");
-}
-
-function abrirAdmin() {
-  // Modo local de prueba: no es una autenticación segura.
-  administrador = true;
-  $("administracion").classList.remove("oculto");
-  cargarEditor();
-  render();
-  $("administracion").scrollIntoView();
-}
-
-function cerrarAdmin() {
-  administrador = false;
-  $("administracion").classList.add("oculto");
-  render();
-}
-
-function cargarEditor() {
-  $("editTitulo").value = db.titulo;
-  $("editDescripcion").value = db.descripcion;
-  $("editFecha").value = db.fecha;
-  $("editLugar").value = db.lugar;
-  $("editPago").value = db.pago;
-  $("editReglas").value = db.reglas;
-  $("editStream").value = db.stream;
-}
-
-function guardarConfiguracion() {
-  if (!administrador) return;
-
-  db.titulo = $("editTitulo").value.trim() || "TORNEO ROYALE";
-  db.descripcion = $("editDescripcion").value.trim();
-  db.fecha = $("editFecha").value;
-  db.lugar = $("editLugar").value.trim();
-  db.pago = $("editPago").value.trim();
-  db.reglas = $("editReglas").value.trim();
-  db.stream = validarUrl($("editStream").value.trim());
-
-  guardar();
-  render();
-  alert("Cambios guardados.");
-}
-
-function leerImagen(archivo, callback) {
-  if (!archivo || !archivo.type.startsWith("image/")) {
-    alert("Selecciona una imagen válida.");
-    return;
-  }
-  if (archivo.size > 1200000) {
-    alert("Utiliza una imagen menor a 1.2 MB.");
-    return;
-  }
-  const lector = new FileReader();
-  lector.onload = () => callback(lector.result);
-  lector.readAsDataURL(archivo);
-}
-
-function subirPortada() {
-  if (!administrador) return;
-  leerImagen($("archivoPortada").files[0], imagen => {
-    db.portada = imagen;
-    guardar();
-    render();
-  });
-}
-
-function subirGaleria() {
-  if (!administrador) return;
-  if (db.galeria.length >= 12) {
-    alert("Límite de 12 imágenes.");
-    return;
-  }
-  leerImagen($("archivoGaleria").files[0], imagen => {
-    db.galeria.push(imagen);
-    guardar();
-    render();
-  });
-}
-
-function borrarImagen(indice) {
-  if (!administrador) return;
-  db.galeria.splice(indice, 1);
-  guardar();
-  render();
-}
-
-function vaciarGaleria() {
-  if (!administrador || !confirm("¿Eliminar toda la galería?")) return;
-  db.galeria = [];
-  guardar();
-  render();
-}
-
-function renderAdmin() {
-  $("adminJugadores").innerHTML = db.jugadores.map(j => `
-    <div class="panel">
-      <strong>${limpiar(j.nombre)}</strong>
-      <p>${limpiar(j.tag)} · ${limpiar(j.contacto)}</p>
-      <p>Pago: ${limpiar(j.referencia)} · ${limpiar(j.pase)}</p>
-      <p>Estado: ${j.aprobado ? "Aprobado" : "Pendiente"}</p>
-      <div class="acciones">
-        ${!j.aprobado
-          ? `<button onclick="aprobar('${j.id}')">Aprobar</button>`
-          : ""}
-        <button class="peligro" onclick="eliminarJugador('${j.id}')">
-          Eliminar
-        </button>
-      </div>
-    </div>
-  `).join("");
-
-  const activos = db.jugadores.filter(j =>
-    j.aprobado && j.bracket !== "eliminated"
-  );
-  const opciones = activos.map(j =>
-    `<option value="${limpiar(j.id)}">${limpiar(j.nombre)}</option>`
-  ).join("");
-  $("jugador1").innerHTML = opciones;
-  $("jugador2").innerHTML = opciones;
-
-  $("adminPartidas").innerHTML = db.partidas.map(p => `
-    <div class="panel">
-      <strong>${limpiar(p.nombre1)} vs ${limpiar(p.nombre2)}</strong>
-      <p>${p.ganador ? "Ganador: " + limpiar(p.ganador) : "Pendiente"}</p>
-      ${!p.ganador ? `
-        <button onclick="resolver('${p.id}',1)">
-          Ganó ${limpiar(p.nombre1)}
-        </button>
-        <button onclick="resolver('${p.id}',2)">
-          Ganó ${limpiar(p.nombre2)}
-        </button>
-      ` : ""}
-    </div>
-  `).join("");
-}
-
-function aprobar(id) {
-  if (!administrador) return;
-  const jugador = db.jugadores.find(j => j.id === id);
-  if (!jugador) return;
-  jugador.aprobado = true;
-  guardar();
-  render();
-}
-
-function eliminarJugador(id) {
-  if (!administrador) return;
-  if (db.partidas.some(p =>
-    p.j1 === id || p.j2 === id
-  )) {
-    alert("No se puede eliminar un jugador con partidas registradas.");
-    return;
-  }
-  if (!confirm("¿Eliminar este jugador?")) return;
-  db.jugadores = db.jugadores.filter(j => j.id !== id);
-  guardar();
-  render();
-}
-
-function crearPartida() {
-  if (!administrador) return;
-  const id1 = $("jugador1").value;
-  const id2 = $("jugador2").value;
-
-  if (!id1 || !id2 || id1 === id2) {
-    alert("Selecciona dos jugadores diferentes.");
-    return;
-  }
-
-  const pendiente = db.partidas.some(p =>
-    !p.ganador && [p.j1,p.j2].some(id =>
-      id === id1 || id === id2
-    )
-  );
-  if (pendiente) {
-    alert("Uno de los jugadores ya tiene una partida pendiente.");
-    return;
-  }
-
-  const j1 = db.jugadores.find(j => j.id === id1);
-  const j2 = db.jugadores.find(j => j.id === id2);
-  if (!j1 || !j2) return;
-
-  db.partidas.push({
-    id: idNuevo(),
-    j1: id1,
-    j2: id2,
-    nombre1: j1.nombre,
-    nombre2: j2.nombre,
-    ganador: ""
-  });
-
-  guardar();
-  render();
-}
-
-function resolver(id, opcion) {
-  if (!administrador) return;
-  const partida = db.partidas.find(p => p.id === id);
-  if (!partida || partida.ganador) return;
-
-  const ganadorId = opcion === 1 ? partida.j1 : partida.j2;
-  const perdedorId = opcion === 1 ? partida.j2 : partida.j1;
-  const ganador = db.jugadores.find(j => j.id === ganadorId);
-  const perdedor = db.jugadores.find(j => j.id === perdedorId);
-  if (!ganador || !perdedor) return;
-
-  if (!confirm("¿Confirmar resultado de la partida?")) return;
-
-  ganador.victorias++;
-  perdedor.derrotas++;
-  partida.ganador = ganador.nombre;
-
-  if (perdedor.bracket === "upper") {
-    perdedor.bracket = perdedor.pase === "doble"
-      ? "lower" : "eliminated";
-  } else {
-    perdedor.bracket = "eliminated";
-  }
-
-  guardar();
-  render();
-}
-
-function exportarDatos() {
-  if (!administrador) return;
-  const archivo = new Blob([JSON.stringify(db,null,2)], {
-    type: "application/json"
-  });
-  const url = URL.createObjectURL(archivo);
-  const enlace = document.createElement("a");
-  enlace.href = url;
-  enlace.download = "torneo-royale-datos.json";
-  enlace.click();
-  URL.revokeObjectURL(url);
-}
-
-render();
-</script>
+    renderAll();
+  </script>
 </body>
 </html>
