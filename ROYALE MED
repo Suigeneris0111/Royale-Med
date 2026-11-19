@@ -1,0 +1,777 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Torneo Royale</title>
+<style>
+:root {
+  --fondo: #090d18;
+  --panel: #141b2b;
+  --dorado: #e8bd56;
+  --texto: #f5f5f5;
+  --borde: #343e50;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--fondo);
+  color: var(--texto);
+  font-family: Arial, sans-serif;
+}
+header {
+  background: #101624;
+  border-bottom: 1px solid var(--dorado);
+  padding: 18px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+nav {
+  max-width: 1100px;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.logo { color: var(--dorado); font-size: 23px; font-weight: bold; }
+nav a { color: white; text-decoration: none; margin: 6px; }
+main { max-width: 1100px; margin: auto; padding: 18px; }
+section { margin: 30px 0; }
+h1, h2, h3 { color: var(--dorado); }
+.hero {
+  text-align: center;
+  border: 1px solid var(--borde);
+  border-radius: 20px;
+  padding: 40px 20px;
+  background: linear-gradient(135deg,#182239,#090d18);
+}
+.hero h1 { font-size: clamp(32px,6vw,60px); margin: 10px 0; }
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--borde);
+  border-radius: 14px;
+  padding: 20px;
+  margin: 14px 0;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(230px,1fr));
+  gap: 16px;
+}
+input, select, textarea {
+  display: block;
+  width: 100%;
+  background: #0a1020;
+  color: white;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  padding: 12px;
+  margin: 8px 0 16px;
+  font: inherit;
+}
+label { font-weight: bold; }
+button, .boton {
+  border: 0;
+  background: var(--dorado);
+  color: #111;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+button:hover { filter: brightness(1.15); }
+.secundario {
+  background: #273249;
+  color: white;
+  border: 1px solid var(--borde);
+}
+.peligro { background: #aa3535; color: white; }
+.acciones { display: flex; flex-wrap: wrap; gap: 8px; }
+.precio { color: var(--dorado); font-size: 30px; font-weight: bold; }
+.muted { color: #adb7c9; }
+.tarjeta { text-align: center; }
+.tarjeta img {
+  width: 85px;
+  height: 85px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--dorado);
+}
+.portada {
+  max-width: 100%;
+  max-height: 340px;
+  border-radius: 12px;
+  object-fit: cover;
+  margin: 15px auto;
+  display: block;
+}
+.galeria img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+table { width: 100%; border-collapse: collapse; }
+td, th { border-bottom: 1px solid var(--borde); padding: 12px; text-align: left; }
+.tabla { overflow-x: auto; }
+.oculto { display: none; }
+.estado { font-size: 13px; color: var(--dorado); }
+footer { text-align: center; padding: 30px; color: #999; }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="logo">♛ TORNEO ROYALE</div>
+    <div>
+      <a href="#inicio">Inicio</a>
+      <a href="#inscripcion">Inscripción</a>
+      <a href="#jugadores">Jugadores</a>
+      <a href="#partidas">Partidas</a>
+      <a href="#reglas">Reglas</a>
+    </div>
+    <button onclick="abrirAdmin()">⚙ Organizador</button>
+  </nav>
+</header>
+
+<main>
+  <section id="inicio" class="hero">
+    <p>COMPETENCIA DE CLASH ROYALE</p>
+    <h1 id="titulo">TORNEO ROYALE</h1>
+    <p id="descripcion">Demuestra tu habilidad y conquista la arena.</p>
+    <img id="portada" class="portada oculto" alt="Portada del torneo">
+    <h2 id="fecha">23 de noviembre de 2026</h2>
+    <p id="lugar">Modalidad virtual y presencial</p>
+    <div class="acciones" style="justify-content:center">
+      <a class="boton" href="#inscripcion">Inscribirme</a>
+      <a class="boton secundario" href="#jugadores">Ver participantes</a>
+    </div>
+  </section>
+
+  <section>
+    <h2>Inscripciones</h2>
+    <div class="grid">
+      <div class="panel">
+        <h3>Pase Simple</h3>
+        <div class="precio">S/ 3.00</div>
+        <p>Una oportunidad. Eliminación al perder.</p>
+      </div>
+      <div class="panel">
+        <h3>Doble Oportunidad</h3>
+        <div class="precio">S/ 5.00</div>
+        <p>Una segunda oportunidad en Lower Bracket.</p>
+      </div>
+      <div class="panel">
+        <h3>Participantes confirmados</h3>
+        <div class="precio" id="totalJugadores">0</div>
+        <p>Jugadores registrados y aprobados.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="inscripcion">
+    <h2>⚔ Inscripción de jugadores</h2>
+    <div class="panel">
+      <form id="formRegistro">
+        <label>Nombre o apodo</label>
+        <input id="nombre" required maxlength="40"
+               placeholder="Tu nombre en el torneo">
+
+        <label>Tag de Clash Royale</label>
+        <input id="tag" required maxlength="20"
+               placeholder="#ABC123">
+
+        <label>Contacto (WhatsApp o Discord)</label>
+        <input id="contacto" required
+               placeholder="Tu contacto">
+
+        <label>Tipo de inscripción</label>
+        <select id="pase">
+          <option value="simple">Pase Simple - S/ 3</option>
+          <option value="doble">Doble Oportunidad - S/ 5</option>
+        </select>
+
+        <label>Modalidad</label>
+        <select id="modalidad">
+          <option>Virtual</option>
+          <option>Presencial</option>
+        </select>
+
+        <label>Referencia de pago</label>
+        <input id="pago" placeholder="Número de operación o efectivo">
+
+        <p class="muted" id="informacionPago">
+          El organizador verificará el pago.
+        </p>
+        <button type="submit">Enviar inscripción</button>
+      </form>
+    </div>
+  </section>
+
+  <section id="jugadores">
+    <h2>🏆 Jugadores confirmados</h2>
+    <div id="listaJugadores" class="grid"></div>
+  </section>
+
+  <section id="partidas">
+    <h2>⚔ Enfrentamientos</h2>
+    <div id="listaPartidas" class="grid"></div>
+  </section>
+
+  <section id="clasificacion">
+    <h2>📊 Clasificación</h2>
+    <div class="panel tabla">
+      <table>
+        <thead>
+          <tr>
+            <th>Jugador</th>
+            <th>Victorias</th>
+            <th>Derrotas</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id="ranking"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="galeriaSeccion">
+    <h2>🖼 Galería del torneo</h2>
+    <div id="galeria" class="grid galeria"></div>
+  </section>
+
+  <section id="reglas">
+    <h2>📜 Reglamento</h2>
+    <div class="panel" id="textoReglas"></div>
+  </section>
+
+  <section id="transmision">
+    <h2>🔴 Transmisión del torneo</h2>
+    <div class="panel">
+      <p>Consulta la transmisión oficial del organizador.</p>
+      <a id="enlaceStream" class="boton oculto"
+         target="_blank" rel="noopener noreferrer">
+        Ver transmisión
+      </a>
+      <p id="sinStream" class="muted">Aún no hay transmisión configurada.</p>
+    </div>
+  </section>
+
+  <section id="administracion" class="oculto">
+    <h2>⚙ Panel de administración</h2>
+    <div class="panel">
+      <h3>Editar información del torneo</h3>
+
+      <label>Nombre del torneo</label>
+      <input id="editTitulo">
+
+      <label>Descripción</label>
+      <textarea id="editDescripcion"></textarea>
+
+      <label>Fecha</label>
+      <input id="editFecha" type="date">
+
+      <label>Lugar o modalidad</label>
+      <input id="editLugar">
+
+      <label>Información de pagos</label>
+      <textarea id="editPago"></textarea>
+
+      <label>Reglamento</label>
+      <textarea id="editReglas" rows="6"></textarea>
+
+      <label>Enlace de transmisión</label>
+      <input id="editStream" type="url"
+             placeholder="https://youtube.com/...">
+
+      <button onclick="guardarConfiguracion()">Guardar cambios</button>
+    </div>
+
+    <div class="panel">
+      <h3>🖼 Administrar imágenes</h3>
+      <label>Subir imagen de portada</label>
+      <input type="file" id="archivoPortada" accept="image/*">
+      <button onclick="subirPortada()">Guardar portada</button>
+
+      <hr>
+      <label>Agregar imagen a la galería</label>
+      <input type="file" id="archivoGaleria" accept="image/*">
+      <button onclick="subirGaleria()">Agregar imagen</button>
+      <button class="secundario" onclick="vaciarGaleria()">
+        Vaciar galería
+      </button>
+    </div>
+
+    <div class="panel">
+      <h3>Administrar inscripciones</h3>
+      <div id="adminJugadores"></div>
+    </div>
+
+    <div class="panel">
+      <h3>Crear enfrentamiento</h3>
+      <label>Jugador 1</label>
+      <select id="jugador1"></select>
+      <label>Jugador 2</label>
+      <select id="jugador2"></select>
+      <button onclick="crearPartida()">Crear partida</button>
+      <div id="adminPartidas"></div>
+    </div>
+
+    <div class="panel">
+      <h3>Exportar datos</h3>
+      <button onclick="exportarDatos()">Descargar copia JSON</button>
+      <button class="secundario" onclick="cerrarAdmin()">
+        Cerrar administración
+      </button>
+    </div>
+  </section>
+</main>
+
+<footer>
+  TORNEO ROYALE · Plataforma de competición
+</footer>
+
+<script>
+const CLAVE = "torneo_royale_datos_v2";
+const inicial = {
+  titulo: "TORNEO ROYALE",
+  descripcion: "Demuestra tu habilidad y conquista la arena.",
+  fecha: "2026-11-23",
+  lugar: "Modalidad virtual y presencial",
+  pago: "El organizador verificará tu pago.",
+  reglas: [
+    "Pase Simple: una oportunidad.",
+    "Pase Doble: una segunda oportunidad en Lower Bracket.",
+    "Respeta los horarios y las decisiones del organizador.",
+    "Los resultados deben ser confirmados por el organizador."
+  ].join("\n"),
+  stream: "",
+  portada: "",
+  galeria: [],
+  jugadores: [],
+  partidas: []
+};
+
+function cargar() {
+  try {
+    const datos = JSON.parse(localStorage.getItem(CLAVE));
+    return datos ? { ...inicial, ...datos } : structuredClone(inicial);
+  } catch {
+    return structuredClone(inicial);
+  }
+}
+
+let db = cargar();
+let administrador = false;
+
+function guardar() {
+  try {
+    localStorage.setItem(CLAVE, JSON.stringify(db));
+  } catch {
+    alert("No hay espacio para guardar más imágenes. Usa imágenes pequeñas.");
+  }
+}
+
+function $(id) { return document.getElementById(id); }
+
+function limpiar(texto) {
+  return String(texto ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function idNuevo() {
+  return crypto.randomUUID
+    ? crypto.randomUUID()
+    : Date.now() + "_" + Math.random();
+}
+
+function fechaLegible(fecha) {
+  if (!fecha) return "Fecha por confirmar";
+  return new Date(fecha + "T12:00:00")
+    .toLocaleDateString("es-PE", {
+      day: "numeric", month: "long", year: "numeric"
+    });
+}
+
+function render() {
+  $("titulo").textContent = db.titulo;
+  $("descripcion").textContent = db.descripcion;
+  $("fecha").textContent = fechaLegible(db.fecha);
+  $("lugar").textContent = db.lugar;
+  $("informacionPago").textContent = db.pago;
+  $("textoReglas").textContent = db.reglas;
+
+  $("totalJugadores").textContent =
+    db.jugadores.filter(j => j.aprobado).length;
+
+  if (db.portada) {
+    $("portada").src = db.portada;
+    $("portada").classList.remove("oculto");
+  } else {
+    $("portada").classList.add("oculto");
+  }
+
+  const url = validarUrl(db.stream);
+  $("enlaceStream").classList.toggle("oculto", !url);
+  $("sinStream").classList.toggle("oculto", !!url);
+  if (url) $("enlaceStream").href = url;
+
+  renderJugadores();
+  renderPartidas();
+  renderRanking();
+  renderGaleria();
+
+  if (administrador) {
+    renderAdmin();
+  }
+}
+
+function validarUrl(url) {
+  try {
+    const u = new URL(url);
+    return ["http:", "https:"].includes(u.protocol)
+      ? u.href : "";
+  } catch {
+    return "";
+  }
+}
+
+$("formRegistro").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const tag = $("tag").value.trim().toUpperCase();
+  const normalizado = tag.startsWith("#") ? tag : "#" + tag;
+
+  if (!/^#[A-Z0-9]{3,15}$/.test(normalizado)) {
+    alert("Introduce un tag válido.");
+    return;
+  }
+  if (db.jugadores.some(j => j.tag === normalizado)) {
+    alert("Este tag ya está registrado.");
+    return;
+  }
+
+  db.jugadores.push({
+    id: idNuevo(),
+    nombre: $("nombre").value.trim(),
+    tag: normalizado,
+    contacto: $("contacto").value.trim(),
+    pase: $("pase").value,
+    modalidad: $("modalidad").value,
+    referencia: $("pago").value.trim(),
+    aprobado: false,
+    bracket: "upper",
+    victorias: 0,
+    derrotas: 0
+  });
+
+  guardar();
+  render();
+  this.reset();
+  alert("Inscripción enviada. Pendiente de aprobación.");
+});
+
+function renderJugadores() {
+  const lista = db.jugadores.filter(j => j.aprobado);
+
+  $("listaJugadores").innerHTML = lista.length
+    ? lista.map(j => `
+      <div class="panel tarjeta">
+        <h3>${limpiar(j.nombre)}</h3>
+        <p>${limpiar(j.tag)}</p>
+        <p>${j.pase === "doble" ? "Doble oportunidad" : "Pase simple"}</p>
+        <span class="estado">${limpiar(j.bracket)}</span>
+      </div>
+    `).join("")
+    : '<p class="muted">Todavía no hay jugadores confirmados.</p>';
+}
+
+function renderPartidas() {
+  $("listaPartidas").innerHTML = db.partidas.length
+    ? db.partidas.map(p => `
+      <div class="panel tarjeta">
+        <h3>${limpiar(p.nombre1)} VS ${limpiar(p.nombre2)}</h3>
+        <p>${p.ganador
+          ? "Ganador: " + limpiar(p.ganador)
+          : "Partida pendiente"}</p>
+      </div>
+    `).join("")
+    : '<p class="muted">Aún no hay enfrentamientos.</p>';
+}
+
+function renderRanking() {
+  const jugadores = db.jugadores.filter(j => j.aprobado)
+    .sort((a,b) =>
+      b.victorias - a.victorias || a.derrotas - b.derrotas
+    );
+
+  $("ranking").innerHTML = jugadores.map(j => `
+    <tr>
+      <td>${limpiar(j.nombre)}</td>
+      <td>${j.victorias}</td>
+      <td>${j.derrotas}</td>
+      <td>${limpiar(j.bracket)}</td>
+    </tr>
+  `).join("");
+}
+
+function renderGaleria() {
+  $("galeria").innerHTML = db.galeria.map((imagen, i) => `
+    <div class="panel">
+      <img src="${imagen}" alt="Imagen del torneo ${i+1}">
+      ${administrador
+        ? `<button class="peligro" onclick="borrarImagen(${i})">Eliminar</button>`
+        : ""}
+    </div>
+  `).join("");
+}
+
+function abrirAdmin() {
+  // Modo local de prueba: no es una autenticación segura.
+  administrador = true;
+  $("administracion").classList.remove("oculto");
+  cargarEditor();
+  render();
+  $("administracion").scrollIntoView();
+}
+
+function cerrarAdmin() {
+  administrador = false;
+  $("administracion").classList.add("oculto");
+  render();
+}
+
+function cargarEditor() {
+  $("editTitulo").value = db.titulo;
+  $("editDescripcion").value = db.descripcion;
+  $("editFecha").value = db.fecha;
+  $("editLugar").value = db.lugar;
+  $("editPago").value = db.pago;
+  $("editReglas").value = db.reglas;
+  $("editStream").value = db.stream;
+}
+
+function guardarConfiguracion() {
+  if (!administrador) return;
+
+  db.titulo = $("editTitulo").value.trim() || "TORNEO ROYALE";
+  db.descripcion = $("editDescripcion").value.trim();
+  db.fecha = $("editFecha").value;
+  db.lugar = $("editLugar").value.trim();
+  db.pago = $("editPago").value.trim();
+  db.reglas = $("editReglas").value.trim();
+  db.stream = validarUrl($("editStream").value.trim());
+
+  guardar();
+  render();
+  alert("Cambios guardados.");
+}
+
+function leerImagen(archivo, callback) {
+  if (!archivo || !archivo.type.startsWith("image/")) {
+    alert("Selecciona una imagen válida.");
+    return;
+  }
+  if (archivo.size > 1200000) {
+    alert("Utiliza una imagen menor a 1.2 MB.");
+    return;
+  }
+  const lector = new FileReader();
+  lector.onload = () => callback(lector.result);
+  lector.readAsDataURL(archivo);
+}
+
+function subirPortada() {
+  if (!administrador) return;
+  leerImagen($("archivoPortada").files[0], imagen => {
+    db.portada = imagen;
+    guardar();
+    render();
+  });
+}
+
+function subirGaleria() {
+  if (!administrador) return;
+  if (db.galeria.length >= 12) {
+    alert("Límite de 12 imágenes.");
+    return;
+  }
+  leerImagen($("archivoGaleria").files[0], imagen => {
+    db.galeria.push(imagen);
+    guardar();
+    render();
+  });
+}
+
+function borrarImagen(indice) {
+  if (!administrador) return;
+  db.galeria.splice(indice, 1);
+  guardar();
+  render();
+}
+
+function vaciarGaleria() {
+  if (!administrador || !confirm("¿Eliminar toda la galería?")) return;
+  db.galeria = [];
+  guardar();
+  render();
+}
+
+function renderAdmin() {
+  $("adminJugadores").innerHTML = db.jugadores.map(j => `
+    <div class="panel">
+      <strong>${limpiar(j.nombre)}</strong>
+      <p>${limpiar(j.tag)} · ${limpiar(j.contacto)}</p>
+      <p>Pago: ${limpiar(j.referencia)} · ${limpiar(j.pase)}</p>
+      <p>Estado: ${j.aprobado ? "Aprobado" : "Pendiente"}</p>
+      <div class="acciones">
+        ${!j.aprobado
+          ? `<button onclick="aprobar('${j.id}')">Aprobar</button>`
+          : ""}
+        <button class="peligro" onclick="eliminarJugador('${j.id}')">
+          Eliminar
+        </button>
+      </div>
+    </div>
+  `).join("");
+
+  const activos = db.jugadores.filter(j =>
+    j.aprobado && j.bracket !== "eliminated"
+  );
+  const opciones = activos.map(j =>
+    `<option value="${limpiar(j.id)}">${limpiar(j.nombre)}</option>`
+  ).join("");
+  $("jugador1").innerHTML = opciones;
+  $("jugador2").innerHTML = opciones;
+
+  $("adminPartidas").innerHTML = db.partidas.map(p => `
+    <div class="panel">
+      <strong>${limpiar(p.nombre1)} vs ${limpiar(p.nombre2)}</strong>
+      <p>${p.ganador ? "Ganador: " + limpiar(p.ganador) : "Pendiente"}</p>
+      ${!p.ganador ? `
+        <button onclick="resolver('${p.id}',1)">
+          Ganó ${limpiar(p.nombre1)}
+        </button>
+        <button onclick="resolver('${p.id}',2)">
+          Ganó ${limpiar(p.nombre2)}
+        </button>
+      ` : ""}
+    </div>
+  `).join("");
+}
+
+function aprobar(id) {
+  if (!administrador) return;
+  const jugador = db.jugadores.find(j => j.id === id);
+  if (!jugador) return;
+  jugador.aprobado = true;
+  guardar();
+  render();
+}
+
+function eliminarJugador(id) {
+  if (!administrador) return;
+  if (db.partidas.some(p =>
+    p.j1 === id || p.j2 === id
+  )) {
+    alert("No se puede eliminar un jugador con partidas registradas.");
+    return;
+  }
+  if (!confirm("¿Eliminar este jugador?")) return;
+  db.jugadores = db.jugadores.filter(j => j.id !== id);
+  guardar();
+  render();
+}
+
+function crearPartida() {
+  if (!administrador) return;
+  const id1 = $("jugador1").value;
+  const id2 = $("jugador2").value;
+
+  if (!id1 || !id2 || id1 === id2) {
+    alert("Selecciona dos jugadores diferentes.");
+    return;
+  }
+
+  const pendiente = db.partidas.some(p =>
+    !p.ganador && [p.j1,p.j2].some(id =>
+      id === id1 || id === id2
+    )
+  );
+  if (pendiente) {
+    alert("Uno de los jugadores ya tiene una partida pendiente.");
+    return;
+  }
+
+  const j1 = db.jugadores.find(j => j.id === id1);
+  const j2 = db.jugadores.find(j => j.id === id2);
+  if (!j1 || !j2) return;
+
+  db.partidas.push({
+    id: idNuevo(),
+    j1: id1,
+    j2: id2,
+    nombre1: j1.nombre,
+    nombre2: j2.nombre,
+    ganador: ""
+  });
+
+  guardar();
+  render();
+}
+
+function resolver(id, opcion) {
+  if (!administrador) return;
+  const partida = db.partidas.find(p => p.id === id);
+  if (!partida || partida.ganador) return;
+
+  const ganadorId = opcion === 1 ? partida.j1 : partida.j2;
+  const perdedorId = opcion === 1 ? partida.j2 : partida.j1;
+  const ganador = db.jugadores.find(j => j.id === ganadorId);
+  const perdedor = db.jugadores.find(j => j.id === perdedorId);
+  if (!ganador || !perdedor) return;
+
+  if (!confirm("¿Confirmar resultado de la partida?")) return;
+
+  ganador.victorias++;
+  perdedor.derrotas++;
+  partida.ganador = ganador.nombre;
+
+  if (perdedor.bracket === "upper") {
+    perdedor.bracket = perdedor.pase === "doble"
+      ? "lower" : "eliminated";
+  } else {
+    perdedor.bracket = "eliminated";
+  }
+
+  guardar();
+  render();
+}
+
+function exportarDatos() {
+  if (!administrador) return;
+  const archivo = new Blob([JSON.stringify(db,null,2)], {
+    type: "application/json"
+  });
+  const url = URL.createObjectURL(archivo);
+  const enlace = document.createElement("a");
+  enlace.href = url;
+  enlace.download = "torneo-royale-datos.json";
+  enlace.click();
+  URL.revokeObjectURL(url);
+}
+
+render();
+</script>
+</body>
+</html>
