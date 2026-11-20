@@ -11,7 +11,8 @@
       --bg-panel-2: #131927;
       --gold: #e6bd56;
       --gold-bright: #f7d57b;
-      --gold-soft: rgba(230, 189, 86, 0.22);
+      --upper-color: #eab308;
+      --lower-color: #22c55e;
       --text-main: #f4f6fa;
       --text-muted: #98a2b3;
       --border: rgba(255, 255, 255, 0.08);
@@ -48,7 +49,7 @@
     }
 
     .container {
-      max-width: 920px;
+      max-width: 960px;
       margin: 0 auto;
       padding: 0 18px 88px;
     }
@@ -64,7 +65,7 @@
     }
 
     .nav-inner {
-      max-width: 920px;
+      max-width: 960px;
       margin: 0 auto;
       padding: 12px 18px;
       display: flex;
@@ -197,7 +198,7 @@
       flex-wrap: wrap;
     }
 
-    /* Tournaments list matching reference */
+    /* Sections */
     .section-block {
       margin-top: 38px;
     }
@@ -234,6 +235,7 @@
       color: var(--text-muted);
     }
 
+    /* Tournaments stack */
     .tournament-stack {
       display: flex;
       flex-direction: column;
@@ -377,112 +379,227 @@
       resize: vertical;
     }
 
-    /* Brackets */
-    .bracket-tabs {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-bottom: 14px;
+    /* PLAYOFFS BRACKET BOARD (Estilo imagen de referencia) */
+    .playoffs-board {
+      background:
+        radial-gradient(circle at 20% 20%, rgba(234, 179, 8, 0.07), transparent 45%),
+        radial-gradient(circle at 20% 80%, rgba(34, 197, 94, 0.07), transparent 45%),
+        #090d15;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 18px;
     }
 
-    @media (max-width: 560px) {
-      .bracket-tabs {
+    .playoffs-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .playoffs-heading {
+      font-size: 1.45rem;
+      font-weight: 950;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, #86efac, #22c55e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .legend-row {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+    }
+
+    .legend-dot.upper {
+      background: var(--upper-color);
+    }
+
+    .legend-dot.lower {
+      background: var(--lower-color);
+    }
+
+    .bracket-stage-label {
+      display: inline-block;
+      background: #121722;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: var(--text-main);
+      font-size: 0.76rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+    }
+
+    .bracket-tree-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 20px;
+      align-items: center;
+    }
+
+    @media (max-width: 720px) {
+      .bracket-tree-grid {
         grid-template-columns: 1fr;
       }
     }
 
-    .bracket-tab {
-      background: var(--bg-void);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 12px;
-      text-align: left;
-      cursor: pointer;
+    .matches-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
     }
 
-    .bracket-tab.active {
-      border-color: var(--gold);
-      background: rgba(230, 189, 86, 0.09);
+    .match-block {
+      position: relative;
     }
 
-    .bracket-tab-title {
-      font-size: 0.82rem;
+    .match-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+    }
+
+    .match-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 4px;
+    }
+
+    .match-slot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #101520;
+      border: 1px solid rgba(234, 179, 8, 0.45);
+      border-radius: 6px;
+      overflow: hidden;
+      min-height: 40px;
+    }
+
+    .match-slot.lower-slot {
+      border-color: rgba(34, 197, 94, 0.5);
+    }
+
+    .slot-player {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 5px 10px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .slot-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: #182030;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .slot-name {
+      font-size: 0.84rem;
       font-weight: 800;
       color: var(--text-main);
-    }
-
-    .bracket-tab.active .bracket-tab-title {
-      color: var(--gold);
-    }
-
-    .bracket-tab-sub {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-    }
-
-    .players-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
-      gap: 12px;
-    }
-
-    .player-tile {
-      background: var(--bg-panel-2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 13px 11px;
-      text-align: center;
-      position: relative;
+      white-space: nowrap;
       overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .player-line {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: var(--gold);
-    }
-
-    .player-line.lower {
-      background: var(--blue);
-    }
-
-    .player-line.eliminated {
-      background: var(--red);
-    }
-
-    .player-avatar {
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      margin: 4px auto 8px;
-      border: 1.5px solid var(--border-gold);
-      overflow: hidden;
-      background: var(--bg-void);
-    }
-
-    .player-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .player-name {
-      font-size: 0.88rem;
-      font-weight: 800;
-    }
-
-    .player-tag {
-      font-size: 0.72rem;
+    .slot-tag {
+      font-size: 0.68rem;
       color: var(--text-muted);
       font-family: monospace;
+      margin-left: 4px;
     }
 
+    .slot-score {
+      width: 34px;
+      align-self: stretch;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 0.86rem;
+      background: rgba(234, 179, 8, 0.14);
+      color: var(--gold-bright);
+      border-left: 1px solid rgba(234, 179, 8, 0.35);
+    }
+
+    .match-slot.lower-slot .slot-score {
+      background: rgba(34, 197, 94, 0.16);
+      color: #86efac;
+      border-left-color: rgba(34, 197, 94, 0.38);
+    }
+
+    .bracket-divider {
+      border: 0;
+      border-top: 1px dashed rgba(255, 255, 255, 0.16);
+      margin: 22px 0;
+    }
+
+    /* Eliminated strip */
+    .elim-box {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+
+    .elim-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .elim-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      border-radius: 8px;
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      font-size: 0.78rem;
+      color: #fca5a5;
+    }
+
+    /* Badges & Tables */
     .badge {
       display: inline-block;
-      margin-top: 7px;
+      margin-top: 4px;
       padding: 2px 8px;
       border-radius: 999px;
       font-size: 0.68rem;
@@ -515,7 +632,6 @@
       background: rgba(34, 197, 94, 0.1);
     }
 
-    /* Stream, Bets, Rules */
     .stream-box {
       border-radius: 12px;
       border: 1px solid var(--border);
@@ -868,32 +984,16 @@
       </div>
     </section>
 
-    <!-- BRACKETS: UPPER / LOWER / ELIMINADOS -->
+    <!-- CUADRO TIPO TABLA / PLAYOFFS (UPPER & LOWER + ELIMINADOS) -->
     <section class="section-block" id="brackets">
       <div class="section-heading-row">
         <div>
-          <h2>Upper Bracket, Lower Bracket y Eliminados</h2>
-          <p class="section-sub">Quienes tienen Doble Oportunidad (S/ 5) pasan a Lower Bracket al caer; los de S/ 3 se eliminan.</p>
+          <h2>Cuadro de Upper y Lower Bracket</h2>
+          <p class="section-sub">Si un pase de S/ 5 pierde en Upper pasa a Lower; si un pase de S/ 3 pierde en Upper pasa a Eliminados.</p>
         </div>
       </div>
 
-      <div class="panel">
-        <div class="bracket-tabs">
-          <button type="button" class="bracket-tab active" data-bracket="upper">
-            <div class="bracket-tab-title">Upper Bracket</div>
-            <div class="bracket-tab-sub">Cuadro principal</div>
-          </button>
-          <button type="button" class="bracket-tab" data-bracket="lower">
-            <div class="bracket-tab-title">Lower Bracket (S/ 5)</div>
-            <div class="bracket-tab-sub">Doble oportunidad</div>
-          </button>
-          <button type="button" class="bracket-tab" data-bracket="eliminated">
-            <div class="bracket-tab-title">Eliminados</div>
-            <div class="bracket-tab-sub">Fuera del torneo</div>
-          </button>
-        </div>
-        <div class="players-grid" id="bracketGrid"></div>
-      </div>
+      <div class="playoffs-board" id="playoffsBoard"></div>
     </section>
 
     <!-- EN VIVO Y APUESTAS -->
@@ -1037,7 +1137,7 @@
   <div class="toast" id="toast"></div>
 
   <script>
-    const STORAGE_KEY = "royale_med_platform_v1";
+    const STORAGE_KEY = "royale_med_platform_v2";
     const ADMIN_PIN = "1234";
 
     const DEFAULT_DATA = {
@@ -1084,7 +1184,6 @@
     };
 
     let state = loadState();
-    let currentBracket = "upper";
     let unlockedTag = null;
     let adminUnlocked = false;
 
@@ -1123,10 +1222,122 @@
         .replaceAll('"', "&quot;");
     }
 
+    function avatarUrl(name) {
+      return `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(name || "player")}`;
+    }
+
     function bracketLabel(b) {
       if (b === "lower") return "Lower Bracket";
       if (b === "eliminated") return "Eliminado";
       return "Upper Bracket";
+    }
+
+    function slotHtml(player, isLower = false) {
+      if (!player) {
+        return `
+          <div class="match-slot ${isLower ? "lower-slot" : ""}">
+            <div class="slot-player">
+              <span class="slot-name" style="color:var(--text-muted)">Por definir</span>
+            </div>
+            <div class="slot-score">-</div>
+          </div>
+        `;
+      }
+      return `
+        <div class="match-slot ${isLower ? "lower-slot" : ""}">
+          <div class="slot-player">
+            <img class="slot-avatar" src="${avatarUrl(player.name)}" alt="${esc(player.name)}" />
+            <span class="slot-name">${esc(player.name)}</span>
+            <span class="slot-tag">${esc(player.tag)}</span>
+          </div>
+          <div class="slot-score">0</div>
+        </div>
+      `;
+    }
+
+    function matchBlockHtml(label, format, p1, p2, isLower = false) {
+      return `
+        <div class="match-block">
+          <div class="match-meta">
+            <span>${esc(label)}</span>
+            <span>${esc(format)}</span>
+          </div>
+          <div class="match-table" style="display:flex;flex-direction:column;gap:4px;">
+            ${slotHtml(p1, isLower)}
+            ${slotHtml(p2, isLower)}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderPlayoffsBoard() {
+      const confirmed = state.players.filter((p) => p.approved);
+      const upper = confirmed.filter((p) => p.bracket === "upper");
+      const lower = confirmed.filter((p) => p.bracket === "lower");
+      const eliminated = confirmed.filter((p) => p.bracket === "eliminated");
+
+      const u1 = upper[0] || null;
+      const u2 = upper[1] || null;
+      const u3 = upper[2] || null;
+      const u4 = upper[3] || null;
+
+      const l1 = lower[0] || null;
+      const l2 = lower[1] || null;
+      const l3 = lower[2] || null;
+
+      const elimHtml = eliminated.length
+        ? eliminated
+            .map(
+              (p) =>
+                `<span class="elim-pill"><strong>${esc(p.name)}</strong> <span>${esc(p.tag)}</span> (${p.tier === "doble" ? "S/ 5" : "S/ 3"})</span>`
+            )
+            .join("")
+        : `<span style="font-size:0.8rem;color:var(--text-muted)">Ningún jugador eliminado todavía.</span>`;
+
+      document.getElementById("playoffsBoard").innerHTML = `
+        <div class="playoffs-top">
+          <div class="playoffs-heading">PLAYOFFS · CUADRO OFICIAL</div>
+          <div class="legend-row">
+            <span class="legend-item"><span class="legend-dot upper"></span>UPPER BRACKET</span>
+            <span class="legend-item"><span class="legend-dot lower"></span>LOWER BRACKET (S/ 5)</span>
+          </div>
+        </div>
+
+        <div class="bracket-tree-grid">
+          <div>
+            <div class="bracket-stage-label">RONDA 1 - UPPER</div>
+            <div class="matches-col">
+              ${matchBlockHtml("PARTIDA 1", "MD5", u1, u2, false)}
+              ${matchBlockHtml("PARTIDA 2", "BO5", u3, u4, false)}
+            </div>
+          </div>
+          <div>
+            <div class="bracket-stage-label">FINAL UPPER</div>
+            ${matchBlockHtml("PARTIDA 5", "MD5", null, null, false)}
+          </div>
+        </div>
+
+        <hr class="bracket-divider" />
+
+        <div class="bracket-tree-grid">
+          <div>
+            <div class="bracket-stage-label">RONDA 1 - LOWER</div>
+            <div class="matches-col">
+              ${matchBlockHtml("PARTIDA 3", "MD5", l1, l2, true)}
+              ${matchBlockHtml("PARTIDA 4", "MD5", l3, null, true)}
+            </div>
+          </div>
+          <div>
+            <div class="bracket-stage-label">RONDA 2 - LOWER</div>
+            ${matchBlockHtml("PARTIDA 6", "MD5", null, null, true)}
+          </div>
+        </div>
+
+        <div class="elim-box">
+          <div class="bracket-stage-label" style="border-color:rgba(239,68,68,0.35);color:#fca5a5;margin-bottom:0;">ELIMINADOS</div>
+          <div class="elim-list">${elimHtml}</div>
+        </div>
+      `;
     }
 
     function renderAll() {
@@ -1143,7 +1354,7 @@
 
       renderTournaments();
       renderPlayersTable();
-      renderBracketGrid();
+      renderPlayoffsBoard();
       renderStream();
       renderBets();
       renderRules();
@@ -1192,30 +1403,6 @@
             <td><span class="badge ${p.bracket === "lower" ? "blue" : p.bracket === "eliminated" ? "red" : "gold"}">${bracketLabel(p.bracket)}</span></td>
             <td><span class="badge ${p.approved ? "green" : "red"}">${p.approved ? "Confirmado" : "Pendiente"}</span></td>
           </tr>
-        `
-        )
-        .join("");
-    }
-
-    function renderBracketGrid() {
-      const grid = document.getElementById("bracketGrid");
-      const list = state.players.filter((p) => p.bracket === currentBracket && p.approved);
-      if (!list.length) {
-        grid.innerHTML = `<p style="grid-column:1/-1;font-size:0.86rem;color:var(--text-muted);padding:8px 0;">Sin jugadores en esta sección.</p>`;
-        return;
-      }
-      grid.innerHTML = list
-        .map(
-          (p) => `
-          <div class="player-tile">
-            <div class="player-line ${p.bracket}"></div>
-            <div class="player-avatar">
-              <img src="https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(p.name)}" alt="${esc(p.name)}" />
-            </div>
-            <div class="player-name">${esc(p.name)}</div>
-            <div class="player-tag">${esc(p.tag)}</div>
-            <span class="badge ${p.tier === "doble" ? "gold" : ""}">${p.tier === "doble" ? "Doble S/ 5" : "Simple S/ 3"}</span>
-          </div>
         `
         )
         .join("");
@@ -1361,15 +1548,6 @@
         document.getElementById("regTier").value = box.dataset.tier;
         document.getElementById("regPrice").value = box.dataset.price;
         renderAll();
-      });
-    });
-
-    document.querySelectorAll(".bracket-tab").forEach((tab) => {
-      tab.addEventListener("click", () => {
-        document.querySelectorAll(".bracket-tab").forEach((t) => t.classList.remove("active"));
-        tab.classList.add("active");
-        currentBracket = tab.dataset.bracket;
-        renderBracketGrid();
       });
     });
 
