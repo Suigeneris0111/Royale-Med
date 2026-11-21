@@ -1691,8 +1691,50 @@
       inp.value = "";
       sendBotMsg(val);
     });
+const SUPABASE_URL = "https://ptdoisiwrcnjcnurfjhg.supabase.co";
+const SUPABASE_KEY = "sb_publishable_OGB9n7UFfNQiHQjd8_2r2g_NkrvG0Jp";
+const sb = window.supabase?.createClient ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
-    renderAll();
+async function savePlayerToSupabase(player) {
+  if (!sb) return;
+  const { error } = await sb.from("players").insert([{
+    id: player.id,
+    tournament_id: state.selectedTournamentId || "t1",
+    name: player.name,
+    tag: player.tag,
+    tier: player.tier,
+    price: Number(player.price) || 3,
+    modality: player.modality,
+    contact: player.contact,
+    payment_ref: player.paymentRef,
+    bracket: player.bracket,
+    approved: Boolean(player.approved)
+  }]);
+  if (error) console.error("Error Supabase:", error.message);
+}
+
+async function loadPlayersFromSupabase() {
+  if (!sb) return;
+  const { data, error } = await sb.from("players").select("*").order("created_at", { ascending: true });
+  if (error || !Array.isArray(data)) return;
+  state.players = data.map((r) => ({
+    id: r.id,
+    name: r.name,
+    tag: r.tag,
+    tier: r.tier || "simple",
+    price: Number(r.price) || 3,
+    modality: r.modality || "Presencial",
+    contact: r.contact || "",
+    paymentRef: r.payment_ref || "",
+    bracket: r.bracket || "upper",
+    approved: Boolean(r.approved)
+  }));
+  saveState();
+  renderAll();
+}
+
+loadPlayersFromSupabase();
+
   </script>
 </body>
 </html>
