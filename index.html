@@ -1270,75 +1270,128 @@
       `;
     }
 
-    function renderPlayoffsBoard() {
-      const confirmed = state.players.filter((p) => p.approved);
-      const upper = confirmed.filter((p) => p.bracket === "upper");
-      const lower = confirmed.filter((p) => p.bracket === "lower");
-      const eliminated = confirmed.filter((p) => p.bracket === "eliminated");
-
-      const u1 = upper[0] || null;
-      const u2 = upper[1] || null;
-      const u3 = upper[2] || null;
-      const u4 = upper[3] || null;
-
-      const l1 = lower[0] || null;
-      const l2 = lower[1] || null;
-      const l3 = lower[2] || null;
-
-      const elimHtml = eliminated.length
-        ? eliminated
-            .map(
-              (p) =>
-                `<span class="elim-pill"><strong>${esc(p.name)}</strong> <span>${esc(p.tag)}</span> (${p.tier === "doble" ? "S/ 5" : "S/ 3"})</span>`
-            )
-            .join("")
-        : `<span style="font-size:0.8rem;color:var(--text-muted)">Ningún jugador eliminado todavía.</span>`;
-
-      document.getElementById("playoffsBoard").innerHTML = `
-        <div class="playoffs-top">
-          <div class="playoffs-heading">PLAYOFFS · CUADRO OFICIAL</div>
-          <div class="legend-row">
-            <span class="legend-item"><span class="legend-dot upper"></span>UPPER BRACKET</span>
-            <span class="legend-item"><span class="legend-dot lower"></span>LOWER BRACKET (S/ 5)</span>
-          </div>
+    function slotHtml(player, isLower = false, isBye = false) {
+  if (!player) {
+    const label = isBye ? "Pase directo / Esperando rival" : "Por definir";
+    return `
+      <div class="match-slot ${isLower ? "lower-slot" : ""}">
+        <div class="slot-player">
+          <span class="slot-name" style="color:var(--text-muted)">${label}</span>
         </div>
+        <div class="slot-score">${isBye ? "BYE" : "-"}</div>
+      </div>
+    `;
+  }
+  return `
+    <div class="match-slot ${isLower ? "lower-slot" : ""}">
+      <div class="slot-player">
+        <img class="slot-avatar" src="${avatarUrl(player.name)}" alt="${esc(player.name)}" />
+        <span class="slot-name">${esc(player.name)}</span>
+        <span class="slot-tag">${esc(player.tag)}</span>
+      </div>
+      <div class="slot-score">0</div>
+    </div>
+  `;
+}
 
-        <div class="bracket-tree-grid">
-          <div>
-            <div class="bracket-stage-label">RONDA 1 - UPPER</div>
-            <div class="matches-col">
-              ${matchBlockHtml("PARTIDA 1", "MD5", u1, u2, false)}
-              ${matchBlockHtml("PARTIDA 2", "BO5", u3, u4, false)}
-            </div>
-          </div>
-          <div>
-            <div class="bracket-stage-label">FINAL UPPER</div>
-            ${matchBlockHtml("PARTIDA 5", "MD5", null, null, false)}
-          </div>
-        </div>
+function matchBlockHtml(label, format, p1, p2, isLower = false, hasOddBye = false) {
+  return `
+    <div class="match-block">
+      <div class="match-meta">
+        <span>${esc(label)}</span>
+        <span>${esc(format)}</span>
+      </div>
+      <div class="match-table" style="display:flex;flex-direction:column;gap:4px;">
+        ${slotHtml(p1, isLower, false)}
+        ${slotHtml(p2, isLower, hasOddBye && !p2)}
+      </div>
+    </div>
+  `;
+}
 
-        <hr class="bracket-divider" />
+function buildMatchesFromList(list, labelPrefix, isLower = false) {
+  if (!list.length) {
+    return `<p style="font-size:0.82rem;color:var(--text-muted)">Sin jugadores en este bracket por ahora.</p>`;
+  }
+  const blocks = [];
+  for (let i = 0; i < list.length; i += 2) {
+    const p1 = list[i] || null;
+    const p2 = list[i + 1] || null;
+    const isLastOdd = Boolean(p1 && !p2);
+    const matchNum = Math.floor(i / 2) + 1;
+    const fmt = matchNum % 2 === 0 ? "BO5" : "MD5";
+    blocks.push(matchBlockHtml(`${labelPrefix} ${matchNum}`, fmt, p1, p2, isLower, isLastOdd));
+  }
+  return blocks.join("");
+}
 
-        <div class="bracket-tree-grid">
-          <div>
-            <div class="bracket-stage-label">RONDA 1 - LOWER</div>
-            <div class="matches-col">
-              ${matchBlockHtml("PARTIDA 3", "MD5", l1, l2, true)}
-              ${matchBlockHtml("PARTIDA 4", "MD5", l3, null, true)}
-            </div>
-          </div>
-          <div>
-            <div class="bracket-stage-label">RONDA 2 - LOWER</div>
-            ${matchBlockHtml("PARTIDA 6", "MD5", null, null, true)}
-          </div>
-        </div>
+function renderPlayoffsBoard() {
+  const confirmed = state.players.filter((p) => p.approved);
+  const upper = confirmed.filter((p) => p.bracket === "upper");
+  const lower = confirmed.filter((p) => p.bracket === "lower");
+  const eliminated = confirmed.filter((p) => p.bracket === "eliminated");
 
-        <div class="elim-box">
-          <div class="bracket-stage-label" style="border-color:rgba(239,68,68,0.35);color:#fca5a5;margin-bottom:0;">ELIMINADOS</div>
-          <div class="elim-list">${elimHtml}</div>
-        </div>
-      `;
-    }
+  const upperMatchesHtml = buildMatchesFromList(upper, "PARTIDA UPPER", false);
+  const lowerMatchesHtml = buildMatchesFromList(lower, "PARTIDA LOWER", true);
+
+  const upperNextRoundHtml = upper.length > 2
+    ? `
+      <div>
+        <div class="bracket-stage-label">SIGUIENTE RONDA · UPPER</div>
+        ${matchBlockHtml("FINAL UPPER", "MD5", null, null, false, false)}
+      </div>
+    `
+    : "";
+
+  const lowerNextRoundHtml = lower.length > 2
+    ? `
+      <div>
+        <div class="bracket-stage-label">SIGUIENTE RONDA · LOWER</div>
+        ${matchBlockHtml("FINAL LOWER", "MD5", null, null, true, false)}
+      </div>
+    `
+    : "";
+
+  const elimHtml = eliminated.length
+    ? eliminated
+        .map(
+          (p) =>
+            `<span class="elim-pill"><strong>${esc(p.name)}</strong> <span>${esc(p.tag)}</span> (${
+              p.tier === "doble" ? "S/ 5" : "S/ 3"
+            })</span>`
+        )
+        .join("")
+    : `<span style="font-size:0.8rem;color:var(--text-muted)">Ningún jugador eliminado todavía.</span>`;
+
+  document.getElementById("playoffsBoard").innerHTML = `
+    <div class="playoffs-top">
+      <div class="playoffs-heading">PLAYOFFS · CUADRO OFICIAL (${confirmed.length} CONFIRMADOS)</div>
+      <div class="legend-row">
+        <span class="legend-item"><span class="legend-dot upper"></span>UPPER BRACKET (${upper.length})</span>
+        <span class="legend-item"><span class="legend-dot lower"></span>LOWER BRACKET (S/ 5)</span>
+      </div>
+    </div>
+    <div class="bracket-tree-grid">
+      <div>
+        <div class="bracket-stage-label">UPPER BRACKET</div>
+        <div class="matches-col">${upperMatchesHtml}</div>
+      </div>
+      ${upperNextRoundHtml}
+    </div>
+    <hr class="bracket-divider" />
+    <div class="bracket-tree-grid">
+      <div>
+        <div class="bracket-stage-label">LOWER BRACKET (S/ 5)</div>
+        <div class="matches-col">${lowerMatchesHtml}</div>
+      </div>
+      ${lowerNextRoundHtml}
+    </div>
+    <div class="elim-box">
+      <div class="bracket-stage-label" style="border-color:rgba(239,68,68,0.35);color:#fca5a5;margin-bottom:0;">ELIMINADOS (${eliminated.length})</div>
+      <div class="elim-list">${elimHtml}</div>
+    </div>
+  `;
+}
 
     function renderAll() {
       const activeT = state.tournaments.find((t) => t.id === state.selectedTournamentId) || state.tournaments[0];
