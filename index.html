@@ -1575,6 +1575,7 @@
         approved: false
       });
       saveState();
+      savePlayerToSupabase(state.players[state.players.length - 1]);
       e.target.reset();
       document.getElementById("regTier").value = "simple";
       document.getElementById("regPrice").value = "3";
