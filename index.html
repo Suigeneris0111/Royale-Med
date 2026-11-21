@@ -1639,6 +1639,7 @@
       if (!title || options.length < 2) return showToast("Escribe un título y al menos 2 opciones.");
       state.bets.unshift({ id: "b_" + Date.now(), title, options, status: "Abierta", winner: "", entries: [] });
       saveState();
+      saveBetToSupabase(state.bets[0]);
       renderAll();
       document.getElementById("betTitleInput").value = "";
       document.getElementById("betOptionsInput").value = "";
@@ -1736,7 +1737,11 @@ async function loadPlayersFromSupabase() {
   saveState();
   renderAll();
 }
-
+async function saveBetToSupabase(bet) {
+  if (!sb || !bet) return;
+  const { error } = await sb.from("bets").insert([bet]);
+  if (error) console.error("Error Supabase bets:", error.message);
+}
 loadPlayersFromSupabase();
 
   </script>
