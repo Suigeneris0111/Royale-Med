@@ -1138,7 +1138,7 @@
 
   <script>
     const STORAGE_KEY = "royale_med_platform_v2";
-    const ADMIN_PIN = "1234";
+    const ADMIN_PIN = "150320";
 
     const DEFAULT_DATA = {
       selectedTournamentId: "t1",
@@ -1596,7 +1596,7 @@
 
     document.getElementById("adminBtn").addEventListener("click", () => {
       if (!adminUnlocked) {
-        const pin = prompt(`PIN de organizador (por defecto: ${ADMIN_PIN}):`);
+        const pin = prompt("Ingresa el PIN de organizador:");
         if (pin !== ADMIN_PIN) return showToast("PIN incorrecto.");
         adminUnlocked = true;
         document.getElementById("adminPanel").classList.add("open");
